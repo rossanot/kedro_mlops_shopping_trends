@@ -127,6 +127,8 @@ docs/_build/
 target/
 
 # Jupyter Notebook
+notebooks/*.ipynb
+notebooks/*.csv
 .ipynb_checkpoints
 
 # IPython

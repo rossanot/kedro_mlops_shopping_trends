@@ -2,3 +2,11 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+# shopping:
+#   type: pandas.CSVDataSet
+#   filepath: https://www.kaggle.com/datasets/iamsouravbanerjee/customer-shopping-trends-dataset/data?select=shopping_trends_updated.csv
+#   credentials: kaggle
+
+shopping_raw:
+  type: pandas.CSVDataSet
+  filepath: ./data/01_raw
