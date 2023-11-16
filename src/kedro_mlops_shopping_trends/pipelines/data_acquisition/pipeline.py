@@ -15,12 +15,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=request_kaggle_dataset,
                 inputs=['params:kaggle_parms'],
                 outputs=None
-        ),
-        #     node(
-        #         name='get_data',
-        #         func=get_raw_dataset,
-        #         inputs=['kaggle_dataset'],
-        #         outputs=None
-        # ),
+        )
     ]
 )
