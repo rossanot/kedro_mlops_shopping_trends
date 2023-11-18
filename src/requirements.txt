@@ -16,3 +16,5 @@ pytest~=7.2
 traitlets<5.10.0
 # Project specific
 kaggle~=1.5.16
+kedro-datasets[pandas.ParquetDataset]
+kedro-datasets[matplotlib.MatplotlibWriter]

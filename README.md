@@ -120,3 +120,11 @@ To automatically strip out all output cell contents before committing to `git`, 
 ## Package your Kedro project
 
 [Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+
+## Notes about installation
+Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
+
+```
+pip install kedro-datasets[pandas.ParquetDataset]
+pip install kedro-datasets[matplotlib.MatplotlibWriter]
+```

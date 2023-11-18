@@ -1,0 +1,9 @@
+name: kedro_shop
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - pip:
+    - scipy
+    - ipykernel
+    - -r ./src/requirements.txt
