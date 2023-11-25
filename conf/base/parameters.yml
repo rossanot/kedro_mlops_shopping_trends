@@ -3,3 +3,6 @@ kaggle_parms:
   dataset_name: 'customer-shopping-trends-dataset'
   file_name: 'shopping_trends_updated.csv'
 
+box_plot:
+  features: ['Gender', 'Category', 'Season']
+

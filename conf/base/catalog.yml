@@ -1,12 +1,30 @@
 # Here you can define all your data sets by using simple YAML syntax.
 #
 # Documentation for this file format can be found in "The Data Catalog"
-# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
-# shopping:
-#   type: pandas.CSVDataSet
-#   filepath: https://www.kaggle.com/datasets/iamsouravbanerjee/customer-shopping-trends-dataset/data?select=shopping_trends_updated.csv
-#   credentials: kaggle
 
+# The downloaded raw dataset
 shopping_raw:
-  type: pandas.CSVDataSet
-  filepath: ./data/01_raw
+  type: pandas.CSVDataset
+  filepath: ./data/01_raw/shopping_trends_updated.csv
+
+# Preprocessed dataset
+shopping_inter:
+  type: pandas.ParquetDataset
+  filepath: ./data/02_intermediate/shopping_preproc.parquet
+
+# EDA on raw dataset
+shopping_raw_hbar:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hbar.jpeg
+
+shopping_raw_box_gender:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_gender.jpeg
+
+shopping_raw_box_category:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_category.jpeg
+
+shopping_raw_box_season:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_season.jpeg
