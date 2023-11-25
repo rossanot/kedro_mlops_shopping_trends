@@ -18,3 +18,4 @@ traitlets<5.10.0
 kaggle~=1.5.16
 kedro-datasets[pandas.ParquetDataset]
 kedro-datasets[matplotlib.MatplotlibWriter]
+kedro-viz
