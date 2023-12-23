@@ -1,4 +1,13 @@
-# kedro_mlops_shopping_trends
+# **Prediction of Shopping Review Ratings**
+# **Implementation of a ML Pipeline Using Kedro** 
+
+## **Business Case**
+Use case: Predict the review rating of a customer.
+Target: `Review Rating`
+Nowadays customers decide where to spend their money based on review ratings posted on social media, for example, Google reviews. A bad review rating could translate into financial loses to a business.
+
+Predicting the review rating of a customer could let the clothing company take immediate action to prevent a bad rating or further positive enagagement of the customer. For example, the store staff could offer a discount, cupon, or any other complementary service at the checkout.
+
 
 ## Overview
 
@@ -128,3 +137,6 @@ Should you have any problems installing `kedro[pandas]` through `pip install ked
 pip install kedro-datasets[pandas.ParquetDataset]
 pip install kedro-datasets[matplotlib.MatplotlibWriter]
 ```
+
+## TO-DO
+Tests to check sanity of data.
