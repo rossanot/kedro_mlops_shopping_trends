@@ -1,6 +1,7 @@
 name: kedro_shop
 dependencies:
   - python=3.10
+  - pip
   - numpy
   - pandas
   - seaborn

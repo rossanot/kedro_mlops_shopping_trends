@@ -2,23 +2,27 @@
 This is a boilerplate pipeline 'eda'
 generated using Kedro 0.18.14
 """
+import os
+from os import path
 
 import pandas as pd
+import numpy as np
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from typing import Any, List, Dict
+from typing import List, Dict
 
-def get_description(dataset: Any) -> pd.DataFrame:
+
+def get_description(df: pd.DataFrame) -> str:
     """Get basic statistical descriptors of the dataset
 
-    :param dataset: _description_
-    :type dataset: Any
-    :return: pd.DataFrame
+    :param df: A dataframe
+    :type df: pd.DataFrame
+    :return: str
     """
 
-    df = pd.read_csv(dataset)
-    return df.describe()
+    return df.describe().to_string()
 
 
 def _get_categ_features(df: pd.DataFrame) -> List[str]:
@@ -27,14 +31,14 @@ def _get_categ_features(df: pd.DataFrame) -> List[str]:
     :param df: A dataframe
     :type df: pd.DataFrame
     :return: A list of features of object type
-    """    
+    """
     return df.select_dtypes(include='object').columns.to_list()
 
 
-def get_mult_bar_plot(df: pd.DataFrame):
-    """Get bar plot
+def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
+    """Get multiple bar plot
 
-    :param df: the entire dataframe
+    :param df: a dataframe
     :type df: pd.DataFrame
     :return: a matplotlib object
     """    
@@ -56,6 +60,27 @@ def get_mult_bar_plot(df: pd.DataFrame):
     return fig
 
 
+def get_bar_plot(df: pd.DataFrame, features: Dict) -> List:
+    """Get bar plot
+
+    :param df: the entire dataframe
+    :type df: pd.DataFrame
+    :return: a matplotlib object
+    """
+    
+    figs = []
+    for feature in features['features']:
+        fig = plt.figure(figsize=(10, 10))
+        plt.barh(list(df[feature].value_counts().index),
+                 df[feature].value_counts().values)
+        plt.xticks(rotation=45)
+        plt.xlabel('Count')
+        plt.ylabel(feature.replace('_', ' '))
+        figs.append(fig)
+
+    return figs
+
+
 def get_box_plot(df: pd.DataFrame, features: Dict) -> List:
     """Generate box plot
 
@@ -63,7 +88,7 @@ def get_box_plot(df: pd.DataFrame, features: Dict) -> List:
     :type df: pd.DataFrame
     :param features: a Dict containing the features to plot
     :type features: Dict
-    :return: a list of matplotlib objects
+    :return: a List of matplotlib objects
     """
     figs = []
     for feature in features['features']:
@@ -73,3 +98,37 @@ def get_box_plot(df: pd.DataFrame, features: Dict) -> List:
         figs.append(fig)
 
     return figs
+
+
+def get_hist_plot(df: pd.DataFrame, features: Dict) -> List:
+    """Generate box plot
+
+    :param df: the entire dataframe
+    :type df: pd.DataFrame
+    :param features: a Dict containing the features to plot
+    :type features: Dict
+    :return: a List of matplotlib objects
+    """
+    figs = []
+    for feature in features['features']:
+        fig = plt.figure(figsize=(5, 5))
+        sns.histplot(data=df, x=feature, kde=True, color='black')
+
+        figs.append(fig)
+
+    return figs
+
+def get_corr_plot(df: pd.DataFrame, features: Dict) -> plt.figure:
+    """Generate correlation matrix plot
+
+    :param df: the entire dataframe
+    :type df: pd.DataFrame
+    :param features: a Dict containing the features to plot
+    :type features: Dict
+    :return: a matplotlib object
+    """
+
+    fig = plt.figure(figsize=(10, 10))
+    sns.heatmap(df[features['features']].corr(), annot=True, cmap="magma", fmt='.2f')
+    
+    return fig
