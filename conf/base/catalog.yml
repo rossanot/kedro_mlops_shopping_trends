@@ -9,4 +9,12 @@
 
 shopping_raw:
   type: pandas.CSVDataSet
-  filepath: ./data/01_raw
+  filepath: ./data/01_raw/shopping_trends_updated.csv
+
+shopping_02_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/02_intermediate/shopping_intermediate.parquet
+
+shopping_03_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/shopping_primary.parquet
