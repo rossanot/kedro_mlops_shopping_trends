@@ -6,8 +6,6 @@ import pandas as pd
 from pandas import CategoricalDtype
 from sklearn.model_selection import train_test_split
 
-from typing import Any, List, Dict
-
 
 # Split data
 # def split_data(df: pd.DataFrame) -> pd.DataFrame:
