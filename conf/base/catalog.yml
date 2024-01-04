@@ -7,11 +7,6 @@ shopping_raw:
   type: pandas.CSVDataset
   filepath: ./data/01_raw/shopping_trends_updated.csv
 
-# Preprocessed dataset
-shopping_inter:
-  type: pandas.ParquetDataset
-  filepath: ./data/02_intermediate/shopping_preproc.parquet
-
 # EDA on raw dataset
 shopping_raw_stats:
   type: text.TextDataSet

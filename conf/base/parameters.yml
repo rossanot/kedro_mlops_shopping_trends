@@ -1,22 +1,4 @@
-columns:
-  categorical: ['Gender', 'Item Purchased', 'Category', 'Location', 'Size', 'Color', 'Season', 'Subscription Status',\
-    'Shipping Type', 'Discount Applied', 'Promo Code Used', 'Payment Method', 'Frequency of Purchases']
-  numerical: ['Age', 'Purchase Amount (USD)', 'Previous Purchases']
-  target: 'Review Rating'
-
 kaggle_parms:
   user: 'iamsouravbanerjee'
   dataset_name: 'customer-shopping-trends-dataset'
   file_name: 'shopping_trends_updated.csv'
-
-box_plot:
-  features: ['Gender', 'Category', 'Season']
-
-bar_plot:
-  features: ['Gender', 'Category', 'Season']
-
-hist_plot:
-  features: ['Age', 'Purchase Amount (USD)', 'Previous Purchases', 'Review Rating']
-
-corr_plot:
-  features: ['Age', 'Purchase Amount (USD)', 'Previous Purchases', 'Review Rating']

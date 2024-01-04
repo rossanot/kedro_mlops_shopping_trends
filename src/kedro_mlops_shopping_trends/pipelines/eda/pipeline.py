@@ -26,31 +26,31 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 name='EDA_Raw_Boxplot',
                 func=get_box_plot,
-                inputs=['shopping_raw', 'params:box_plot'],
+                inputs=['shopping_raw', 'params:plots'],
                 outputs=['shopping_raw_box_gender', 'shopping_raw_box_category', \
                          'shopping_raw_box_season'],
             ),
             node(
                 name='EDA_Raw_Barplot',
                 func=get_bar_plot,
-                inputs=['shopping_raw', 'params:bar_plot'],
+                inputs=['shopping_raw', 'params:plots'],
                 outputs=['shopping_raw_bar_gender', 'shopping_raw_bar_category', \
                          'shopping_raw_bar_season'],
             ),
             node(
                 name='EDA_Raw_Histplot',
                 func=get_hist_plot,
-                inputs=['shopping_raw', 'params:hist_plot'],
-                outputs=['shopping_raw_hist_age', \
-                         'shopping_raw_hist_purchase_amount', \
+                inputs=['shopping_raw', 'params:plots'],
+                outputs=['shopping_raw_hist_age',
+                         'shopping_raw_hist_purchase_amount',
                          'shopping_raw_hist_prev_purchase',
                          'shopping_raw_hist_rating'],
             ),
             node(
                 name='EDA_Raw_Correlation_Plot',
                 func=get_corr_plot,
-                inputs=['shopping_raw', 'params:corr_plot'],
+                inputs=['shopping_raw', 'params:plots'],
                 outputs='shopping_raw_correlation',
-            ),
+            )
         ]
         )

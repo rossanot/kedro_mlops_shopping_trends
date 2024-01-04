@@ -2,12 +2,8 @@
 This is a boilerplate pipeline 'eda'
 generated using Kedro 0.18.14
 """
-import os
-from os import path
 
 import pandas as pd
-import numpy as np
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -17,8 +13,7 @@ from typing import List, Dict
 def get_description(df: pd.DataFrame) -> str:
     """Get basic statistical descriptors of the dataset
 
-    :param df: A dataframe
-    :type df: pd.DataFrame
+    :param df: a pd.Dataframe
     :return: str
     """
 
@@ -28,8 +23,7 @@ def get_description(df: pd.DataFrame) -> str:
 def _get_categ_features(df: pd.DataFrame) -> List[str]:
     """Get categorical features
 
-    :param df: A dataframe
-    :type df: pd.DataFrame
+    :param df: a pd.Dataframe
     :return: A list of features of object type
     """
     return df.select_dtypes(include='object').columns.to_list()
@@ -38,8 +32,7 @@ def _get_categ_features(df: pd.DataFrame) -> List[str]:
 def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
     """Get multiple bar plot
 
-    :param df: a dataframe
-    :type df: pd.DataFrame
+    :param df: a pd.Dataframe
     :return: a matplotlib object
     """    
 
@@ -50,8 +43,8 @@ def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
     fig = plt.figure(figsize=(25, 55))
     for feature in features:
         plt.subplot(a, b, c)
-        plt.barh(list(df[feature].value_counts().index), \
-                    df[feature].value_counts().values)
+        plt.barh(list(df[feature].value_counts().index), 
+                 df[feature].value_counts().values)
         plt.xticks(rotation=45)
         plt.xlabel('Count')
         plt.ylabel(feature)
@@ -60,16 +53,16 @@ def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
     return fig
 
 
-def get_bar_plot(df: pd.DataFrame, features: Dict) -> List:
+def get_bar_plot(df: pd.DataFrame, params: Dict) -> List:
     """Get bar plot
 
-    :param df: the entire dataframe
-    :type df: pd.DataFrame
-    :return: a matplotlib object
+    :param df: a pd.Dataframe
+    :param params: a Dict containing the features to plot
+    :return: a list of matplotlib objects
     """
     
     figs = []
-    for feature in features['features']:
+    for feature in params['bar_plot']['features']:
         fig = plt.figure(figsize=(10, 10))
         plt.barh(list(df[feature].value_counts().index),
                  df[feature].value_counts().values)
@@ -81,17 +74,15 @@ def get_bar_plot(df: pd.DataFrame, features: Dict) -> List:
     return figs
 
 
-def get_box_plot(df: pd.DataFrame, features: Dict) -> List:
+def get_box_plot(df: pd.DataFrame, params: Dict) -> List:
     """Generate box plot
 
-    :param df: the entire dataframe
-    :type df: pd.DataFrame
-    :param features: a Dict containing the features to plot
-    :type features: Dict
+    :param df: a pd.Dataframe
+    :param params: a Dict containing the features to plot
     :return: a List of matplotlib objects
     """
     figs = []
-    for feature in features['features']:
+    for feature in params['box_plot']['features']:
         fig = plt.figure(figsize=(5, 5))
         sns.boxplot(data=df, x=feature, y='Review Rating', hue=feature)
         
@@ -100,17 +91,15 @@ def get_box_plot(df: pd.DataFrame, features: Dict) -> List:
     return figs
 
 
-def get_hist_plot(df: pd.DataFrame, features: Dict) -> List:
+def get_hist_plot(df: pd.DataFrame, params: Dict) -> List:
     """Generate box plot
 
-    :param df: the entire dataframe
-    :type df: pd.DataFrame
-    :param features: a Dict containing the features to plot
-    :type features: Dict
+    :param df: a pd.Dataframe
+    :param params: a Dict containing the features to plot
     :return: a List of matplotlib objects
     """
     figs = []
-    for feature in features['features']:
+    for feature in params['hist_plot']['features']:
         fig = plt.figure(figsize=(5, 5))
         sns.histplot(data=df, x=feature, kde=True, color='black')
 
@@ -118,17 +107,20 @@ def get_hist_plot(df: pd.DataFrame, features: Dict) -> List:
 
     return figs
 
-def get_corr_plot(df: pd.DataFrame, features: Dict) -> plt.figure:
+
+def get_corr_plot(df: pd.DataFrame, params: Dict) -> plt.figure:
     """Generate correlation matrix plot
 
-    :param df: the entire dataframe
-    :type df: pd.DataFrame
-    :param features: a Dict containing the features to plot
-    :type features: Dict
+    :param df: a pd.Dataframe
+    :param params: a Dict containing the features to plot
     :return: a matplotlib object
     """
 
     fig = plt.figure(figsize=(10, 10))
-    sns.heatmap(df[features['features']].corr(), annot=True, cmap="magma", fmt='.2f')
+    sns.heatmap(
+        df[params['corr_plot']['features']].corr(),
+        annot=True,
+        cmap="magma", fmt='.2f'
+        )
     
     return fig
