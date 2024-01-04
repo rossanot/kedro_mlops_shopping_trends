@@ -8,7 +8,9 @@
 split_data:
   test_size: 0.2
   random_state: 42
-  features:
+
+features:
+  categorical:
     - Gender
     - Item Purchased
     - Category
@@ -22,8 +24,9 @@ split_data:
     - Promo Code Used
     - Payment Method
     - Frequency of Purchases
-    - Age
-    - Purchase Amount (USD)
-    - Previous Purchases
+  numerical:
+  - Age
+  - Purchase Amount (USD)
+  - Previous Purchases
   target:
     - Review Rating

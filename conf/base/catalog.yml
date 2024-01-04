@@ -15,6 +15,19 @@ shopping_02_intermediate:
   type: pandas.ParquetDataSet
   filepath: ./data/02_intermediate/shopping_intermediate.parquet
 
-shopping_03_primary:
+# split_data
+X_train:
   type: pandas.ParquetDataSet
-  filepath: ./data/03_primary/shopping_primary.parquet
+  filepath: ./data/03_primary/X_train.parquet
+
+X_test:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/X_test.parquet
+
+y_train:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/y_train.parquet
+
+y_test:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/y_test.parquet
