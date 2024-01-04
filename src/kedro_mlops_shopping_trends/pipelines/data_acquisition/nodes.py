@@ -11,8 +11,11 @@ from typing import Dict
 
 
 def request_kaggle_dataset(params: Dict) -> None:
-    '''
-    '''
+    """Get dataset from Kaggle API
+
+    :param params: Kaggle API params
+    :type params: Dict
+    """    
 
     conf_path = str(Path('./') / settings.CONF_SOURCE)
     conf_loader = OmegaConfigLoader(conf_source=conf_path)

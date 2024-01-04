@@ -1,16 +1,13 @@
 # Here you can define all your data sets by using simple YAML syntax.
 #
 # Documentation for this file format can be found in "The Data Catalog"
-# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
-# shopping:
-#   type: pandas.CSVDataSet
-#   filepath: https://www.kaggle.com/datasets/iamsouravbanerjee/customer-shopping-trends-dataset/data?select=shopping_trends_updated.csv
-#   credentials: kaggle
 
+# Kaggle Raw dataset
 shopping_raw:
-  type: pandas.CSVDataSet
+  type: pandas.CSVDataset
   filepath: ./data/01_raw/shopping_trends_updated.csv
 
+# Intermediate dataset
 shopping_02_intermediate:
   type: pandas.ParquetDataSet
   filepath: ./data/02_intermediate/shopping_intermediate.parquet
@@ -31,3 +28,60 @@ y_train:
 y_test:
   type: pandas.ParquetDataSet
   filepath: ./data/03_primary/y_test.parquet
+
+# EDA on raw dataset
+shopping_raw_stats:
+  type: text.TextDataSet
+  filepath: ./data/08_reporting/eda_raw_stats.txt
+
+shopping_raw_hbar:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hbar.jpeg
+
+# Box plot
+shopping_raw_box_gender:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_gender.jpeg
+
+shopping_raw_box_category:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_category.jpeg
+
+shopping_raw_box_season:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_box_season.jpeg
+
+# Bar plot
+shopping_raw_bar_gender:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_bar_gender.jpeg
+
+shopping_raw_bar_category:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_bar_category.jpeg
+
+shopping_raw_bar_season:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_bar_season.jpeg
+
+# Hist plot
+shopping_raw_hist_age:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hist_age.jpeg
+
+shopping_raw_hist_purchase_amount:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hist_purchase_amount.jpeg
+
+shopping_raw_hist_prev_purchase:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hist_prev_purchase.jpeg
+
+shopping_raw_hist_rating:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_hist_rating.jpeg
+
+# Correlation plot
+shopping_raw_correlation:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/eda_raw_correlation.jpeg
