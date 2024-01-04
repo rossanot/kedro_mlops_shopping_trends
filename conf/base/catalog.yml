@@ -7,6 +7,28 @@ shopping_raw:
   type: pandas.CSVDataset
   filepath: ./data/01_raw/shopping_trends_updated.csv
 
+# Intermediate dataset
+shopping_02_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/02_intermediate/shopping_intermediate.parquet
+
+# split_data
+X_train:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/X_train.parquet
+
+X_test:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/X_test.parquet
+
+y_train:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/y_train.parquet
+
+y_test:
+  type: pandas.ParquetDataSet
+  filepath: ./data/03_primary/y_test.parquet
+
 # EDA on raw dataset
 shopping_raw_stats:
   type: text.TextDataSet
