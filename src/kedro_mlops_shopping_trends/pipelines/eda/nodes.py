@@ -34,7 +34,7 @@ def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
 
     :param df: a pd.Dataframe
     :return: a matplotlib object
-    """    
+    """
 
     features = _get_categ_features(df)
     a, b = int(len(features)/3)+1, 3
@@ -48,7 +48,7 @@ def get_mult_bar_plot(df: pd.DataFrame) -> plt.figure:
         plt.xticks(rotation=45)
         plt.xlabel('Count')
         plt.ylabel(feature)
-        c+=1
+        c += 1
 
     return fig
 
@@ -60,7 +60,6 @@ def get_bar_plot(df: pd.DataFrame, params: Dict) -> List:
     :param params: a Dict containing the features to plot
     :return: a list of matplotlib objects
     """
-    
     figs = []
     for feature in params['bar_plot']['features']:
         fig = plt.figure(figsize=(10, 10))
