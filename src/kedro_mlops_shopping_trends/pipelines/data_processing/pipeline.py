@@ -3,22 +3,45 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.14
 """
 
-from kedro.pipeline import Pipeline, pipeline, node
-from .nodes import (get_intermediate, split_data, get_primary)
+# from kedro.pipeline import Pipeline, pipeline, node
+# import kedro.pipeline.modular_pipeline.pipeline as mpipeline
+# from .nodes import (get_intermediate, split_data, get_model_input)
+from kedro.pipeline import Pipeline, node
+from kedro.pipeline.modular_pipeline import pipeline
+from .nodes import (get_intermediate,
+                    get_primary,
+                    get_feature,
+                    split_data,
+                    get_model_input)
 
 
 def create_pipeline(**kwargs) -> Pipeline:
-    return pipeline([
+    preprocess_pipeline = pipeline([
         node(
             func=get_intermediate,
             inputs='shopping_raw',
             outputs='shopping_02_intermediate',
-            name='get_intermediate_data',
+            name='get_intermediate_data'
             ),
+        node(
+            func=get_primary,
+            inputs='shopping_02_intermediate',
+            outputs='shopping_03_primary',
+            name='get_primary_data'
+            ),
+        node(
+            func=get_feature,
+            inputs='shopping_03_primary',
+            outputs='shopping_04_feature',
+            name='get_feature_data'
+        )
+    ])
+    
+    encode_pipeline = pipeline([
         node(
             func=split_data,
             inputs=[
-                'shopping_02_intermediate',
+                'input_data',
                 'params:split_data',
                 'params:features'],
             outputs=[
@@ -27,12 +50,48 @@ def create_pipeline(**kwargs) -> Pipeline:
                 'y_train',
                 'y_test'
                 ],
-            name='split_data',
         ),
         node(
-            func=get_primary,
-            inputs=['_X_train', '_X_test', 'params:features'],
+            func=get_model_input,
+            inputs=[
+                '_X_train',
+                '_X_test',
+                'params:features'
+                ],
             outputs=['X_train', 'X_test'],
-            name='get_primary_data',
         )
     ])
+
+    model_input1 = pipeline(
+        pipe=encode_pipeline,
+        inputs={'input_data': 'shopping_raw'},
+        outputs={
+            'X_train': 'X_train_intermediate',
+            'X_test': 'X_test_intermediate',
+            'y_train': 'y_train',
+            'y_test': 'y_test'
+            },
+        namespace='intermediate_data_layer_pipeline'
+        )
+    
+    model_input2 = pipeline(
+        pipe=encode_pipeline,
+        inputs={'input_data': 'shopping_02_intermediate'},
+        outputs={
+            'X_train': 'X_train_primary',
+            'X_test': 'X_test_primary',
+            },
+        namespace='primary_data_layer_pipeline'
+        )
+    
+    model_input3 = pipeline(
+        pipe=encode_pipeline,
+        inputs={'input_data': 'shopping_03_primary'},
+        outputs={
+            'X_train': 'X_train_feature',
+            'X_test': 'X_test_feature',
+            },
+        namespace='feature_data_layer_pipeline'
+        )
+
+    return model_input1 + model_input2 + model_input3 + preprocess_pipeline

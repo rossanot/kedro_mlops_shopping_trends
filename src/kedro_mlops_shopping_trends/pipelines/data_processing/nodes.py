@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import LabelEncoder
 from typing import Tuple, Dict
 import logging
 
@@ -138,28 +139,127 @@ def _encode_item_purchased(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _encode_age(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode Age
+
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
+    group_a = df.loc[df['Age'] <= 31].index.to_list()
+    group_b = df.loc[(df['Age'] > 31) & (df['Age'] <= 44)].index.to_list()
+    group_c = df.loc[(df['Age'] > 44) & (df['Age'] <= 57)].index.to_list()
+    group_d = df.loc[df['Age'] > 57].index.to_list()
+
+    groups = [group_a, group_b, group_c, group_d]
+    codes = ['a', 'b', 'c', 'd']
+    for code, group in zip(codes, groups):
+        df.loc[group, 'Age'] = code
+
+    return df
+
+
+def _encode_purchase_amount(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode Purchase Amount
+
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
+    group_a = df.loc[df['Purchase Amount (USD)'] <= 39.].index.to_list()
+    group_b = df.loc[(df['Purchase Amount (USD)'] > 39.)
+                     & (df['Purchase Amount (USD)'] <= 60.)].index.to_list()
+    group_c = df.loc[(df['Purchase Amount (USD)'] > 60.)
+                     & (df['Purchase Amount (USD)'] <= 81.)].index.to_list()
+    group_d = df.loc[(df['Purchase Amount (USD)'] > 81.)].index.to_list()
+
+    groups = [group_a, group_b, group_c, group_d]
+    codes = ['a', 'b', 'c', 'd']
+    for code, group in zip(codes, groups):
+        df.loc[group, 'Purchase Amount (USD)'] = code
+
+    return df
+
+
+def _encode_previous_purchase(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode Previous Purchases
+
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
+    group_a = df.loc[df['Previous Purchases'] <= 13].index.to_list()
+    group_b = df.loc[(df['Previous Purchases'] > 13)
+                     & (df['Previous Purchases'] <= 25)].index.to_list()
+    group_c = df.loc[(df['Previous Purchases'] > 25)
+                     & (df['Previous Purchases'] <= 38)].index.to_list()
+    group_d = df.loc[df['Previous Purchases'] > 38].index.to_list()
+
+    groups = [group_a, group_b, group_c, group_d]
+    codes = ['a', 'b', 'c', 'd']
+    for code, group in zip(codes, groups):
+        df.loc[group, 'Previous Purchases'] = code
+
+    return df
+
+
+def _encode_review_rating(df: pd.DataFrame) -> pd.DataFrame:
+    
+    rating_bad = df.loc[df['Review Rating'] <= 3.75].index.to_list()
+    rating_good = df.loc[(df['Review Rating'] > 3.75)
+                         & (df['Review Rating'] <= 5.)].index.to_list()
+    
+    df.loc[rating_bad, 'Review Rating'] = 0.
+    df.loc[rating_good, 'Review Rating'] = 1.
+    
+    return df
+
+
 # Get intermediate
 # Clean columns
 def get_intermediate(df: pd.DataFrame) -> pd.DataFrame:
-    """Perform non-transformtative encoding
+    """Encode features
     
-    Encode raw dataset to generate the intermediate dataset
+    Encode raw df and generate the intermediate data layer
     :param df: a pd.DataFrame
     :return: encoded pd.DataFrame
     """
     _df = df.copy()
     _df = _set_dtypes(_df)
     _df = _fix_redudant_frequency(_df)
+    _df = _encode_review_rating(_df)
+    return _df
+
+
+def get_primary(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode features
+    
+    Encode raw df and generate the primary data layer
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
+    _df = df.copy()
     _df = _encode_location(_df)
     _df = _encode_color(_df)
     _df = _encode_item_purchased(_df)
+
+    return _df
+
+def get_feature(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode features
+    
+    Encode raw df and generate the feature data layer
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
+    _df = df.copy()
+    _df = _encode_age(_df)
+    _df = _encode_purchase_amount(_df)
+    _df = _encode_previous_purchase(_df)
     
     return _df
 
 # Encode using Ordinal encoder
 # Get Primary
 # Encode as arrays
-def get_primary(
+def get_model_input(
         X_train: pd.DataFrame,
         X_test: pd.DataFrame,
         features: Dict
@@ -172,7 +272,8 @@ def get_primary(
     """
     _X_train, _X_test = X_train.copy(), X_test.copy()
 
-    for feature in features['categorical']:
+    features = features['categorical'] + features['numerical']
+    for feature in features:
         oec = OrdinalEncoder(
             handle_unknown='use_encoded_value',
             unknown_value=np.nan
@@ -185,6 +286,7 @@ def get_primary(
             )
         _X_test = _X_test.dropna()
     
+
     logger.info('During encoding {} rows were dropped from X_test'.format(
         X_test.shape[0]-_X_test.shape[0]))
     
