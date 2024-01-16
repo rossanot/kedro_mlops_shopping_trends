@@ -46,8 +46,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 'params:features'],
             outputs=[
                 '_X_train',
+                '_X_val',
                 '_X_test',
                 'y_train',
+                'y_val',
                 'y_test'
                 ],
         ),
@@ -55,10 +57,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=get_model_input,
             inputs=[
                 '_X_train',
+                '_X_val',
                 '_X_test',
                 'params:features'
                 ],
-            outputs=['X_train', 'X_test'],
+            outputs=['X_train', 'X_val', 'X_test'],
         )
     ])
 
@@ -67,9 +70,11 @@ def create_pipeline(**kwargs) -> Pipeline:
         inputs={'input_data': 'shopping_raw'},
         outputs={
             'X_train': 'X_train_intermediate',
+            'X_val': 'X_val_intermediate',
             'X_test': 'X_test_intermediate',
-            'y_train': 'y_train',
-            'y_test': 'y_test'
+            'y_train': 'y_train_intermediate',
+            'y_val': 'y_val_intermediate',
+            'y_test': 'y_test_intermediate'
             },
         namespace='intermediate_data_layer_pipeline'
         )
@@ -79,7 +84,11 @@ def create_pipeline(**kwargs) -> Pipeline:
         inputs={'input_data': 'shopping_02_intermediate'},
         outputs={
             'X_train': 'X_train_primary',
+            'X_val': 'X_val_primary',
             'X_test': 'X_test_primary',
+            'y_train': 'y_train_primary',
+            'y_val': 'y_val_primary',
+            'y_test': 'y_test_primary'
             },
         namespace='primary_data_layer_pipeline'
         )
@@ -89,7 +98,11 @@ def create_pipeline(**kwargs) -> Pipeline:
         inputs={'input_data': 'shopping_03_primary'},
         outputs={
             'X_train': 'X_train_feature',
+            'X_val': 'X_val_feature',
             'X_test': 'X_test_feature',
+            'y_train': 'y_train_feature',
+            'y_val': 'y_val_feature',
+            'y_test': 'y_test_feature'
             },
         namespace='feature_data_layer_pipeline'
         )

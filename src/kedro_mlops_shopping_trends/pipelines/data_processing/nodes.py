@@ -13,24 +13,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# Split data
-def split_data(df: pd.DataFrame, params: Dict, features: Dict) -> Tuple:
-    """Split encoded dataset
-
-    :param df: a pd.DataFrame
-    :param params: split data parameters
-    :return: test and train pd.DataFrames and pd.Series
-    """
-    X_train, X_test, y_train, y_test = train_test_split(
-        df[features['categorical'] + features['numerical']],
-        df[features['target']],
-        test_size=params['test_size'],
-        random_state=params['random_state']
-        )
-    
-    return X_train, X_test, y_train, y_test
-
-
 # Encode Binary columns
 def _set_dtypes(df: pd.DataFrame) -> pd.DataFrame:
     """Fix dtype of Purchase column
@@ -150,6 +132,7 @@ def _encode_age(df: pd.DataFrame) -> pd.DataFrame:
     group_c = df.loc[(df['Age'] > 44) & (df['Age'] <= 57)].index.to_list()
     group_d = df.loc[df['Age'] > 57].index.to_list()
 
+    df['Age'] = df['Age'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
     codes = ['a', 'b', 'c', 'd']
     for code, group in zip(codes, groups):
@@ -171,6 +154,7 @@ def _encode_purchase_amount(df: pd.DataFrame) -> pd.DataFrame:
                      & (df['Purchase Amount (USD)'] <= 81.)].index.to_list()
     group_d = df.loc[(df['Purchase Amount (USD)'] > 81.)].index.to_list()
 
+    df['Purchase Amount (USD)'] = df['Purchase Amount (USD)'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
     codes = ['a', 'b', 'c', 'd']
     for code, group in zip(codes, groups):
@@ -192,6 +176,7 @@ def _encode_previous_purchase(df: pd.DataFrame) -> pd.DataFrame:
                      & (df['Previous Purchases'] <= 38)].index.to_list()
     group_d = df.loc[df['Previous Purchases'] > 38].index.to_list()
 
+    df['Previous Purchases'] = df['Previous Purchases'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
     codes = ['a', 'b', 'c', 'd']
     for code, group in zip(codes, groups):
@@ -201,7 +186,11 @@ def _encode_previous_purchase(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _encode_review_rating(df: pd.DataFrame) -> pd.DataFrame:
-    
+    """Encode Review Rating
+
+    :param df: a pd.DataFrame
+    :return: encoded pd.DataFrame
+    """
     rating_bad = df.loc[df['Review Rating'] <= 3.75].index.to_list()
     rating_good = df.loc[(df['Review Rating'] > 3.75)
                          & (df['Review Rating'] <= 5.)].index.to_list()
@@ -242,6 +231,7 @@ def get_primary(df: pd.DataFrame) -> pd.DataFrame:
 
     return _df
 
+
 def get_feature(df: pd.DataFrame) -> pd.DataFrame:
     """Encode features
     
@@ -256,11 +246,37 @@ def get_feature(df: pd.DataFrame) -> pd.DataFrame:
     
     return _df
 
+
+# Split data
+def split_data(df: pd.DataFrame, params: Dict, features: Dict) -> Tuple:
+    """Split encoded dataset
+
+    :param df: a pd.DataFrame
+    :param params: split data parameters
+    :return: test and train pd.DataFrames and pd.Series
+    """
+    X_train, X_test, y_train, y_test = train_test_split(
+        df[features['categorical'] + features['numerical']],
+        df[features['target']],
+        test_size=params['test_size'],
+        random_state=params['random_state']
+        )
+    
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_test,
+        y_test,
+        test_size=params['validation_size'],
+        random_state=params['random_state']
+        )
+
+    return X_train, X_val, X_test, y_train, y_val, y_test
+
+
 # Encode using Ordinal encoder
-# Get Primary
 # Encode as arrays
 def get_model_input(
         X_train: pd.DataFrame,
+        X_val: pd.DataFrame,
         X_test: pd.DataFrame,
         features: Dict
         ) -> Tuple:
@@ -270,7 +286,7 @@ def get_model_input(
     :param X_test: encoded pd.DataFrame
     :return: pd.DataFrame
     """
-    _X_train, _X_test = X_train.copy(), X_test.copy()
+    _X_train, _X_val, _X_test = X_train.copy(), X_val.copy(), X_test.copy()
 
     features = features['categorical'] + features['numerical']
     for feature in features:
@@ -281,13 +297,17 @@ def get_model_input(
         _X_train[feature] = oec.fit_transform(
             _X_train[feature].to_numpy().reshape(-1, 1)
             )
+        _X_val[feature] = oec.transform(
+            _X_val[feature].to_numpy().reshape(-1, 1)
+            )
         _X_test[feature] = oec.transform(
             _X_test[feature].to_numpy().reshape(-1, 1)
             )
+        _X_val = _X_val.dropna()
         _X_test = _X_test.dropna()
     
-
-    logger.info('During encoding {} rows were dropped from X_test'.format(
-        X_test.shape[0]-_X_test.shape[0]))
+    logger.info('During encoding, were dropped:') 
+    logger.info('{} rows from X_val and {} rows from X_test'.format(
+        X_val.shape[0]-_X_val.shape[0], X_test.shape[0]-_X_test.shape[0]))
     
-    return _X_train, _X_test
+    return _X_train, _X_val, _X_test

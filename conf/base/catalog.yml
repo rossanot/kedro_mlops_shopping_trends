@@ -27,33 +27,73 @@ X_train_intermediate:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_train_intermediate.parquet
 
+X_val_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_val_intermediate.parquet
+
 X_test_intermediate:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_test_intermediate.parquet
+
+y_train_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_train_intermediate.parquet
+
+y_val_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_val_intermediate.parquet
+
+y_test_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_intermediate.parquet
 
 X_train_primary:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_train_primary.parquet
 
+X_val_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_val_primary.parquet
+
 X_test_primary:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_test_primary.parquet
+
+y_train_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_train_primary.parquet
+
+y_val_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_val_primary.parquet
+
+y_test_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_primary.parquet
 
 X_train_feature:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_train_feature.parquet
 
+X_val_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_val_feature.parquet
+
 X_test_feature:
   type: pandas.ParquetDataSet
   filepath: ./data/05_model_input/X_test_feature.parquet
 
-y_train:
+y_train_feature:
   type: pandas.ParquetDataSet
-  filepath: ./data/05_model_input/y_train.parquet
+  filepath: ./data/05_model_input/y_train_feature.parquet
 
-y_test:
+y_val_feature:
   type: pandas.ParquetDataSet
-  filepath: ./data/05_model_input/y_test.parquet
+  filepath: ./data/05_model_input/y_val_feature.parquet
+
+y_test_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_feature.parquet
 
 # EDA on raw dataset
 shopping_raw_stats:

@@ -8,6 +8,7 @@
 intermediate_data_layer_pipeline:
   split_data:
     test_size: 0.2
+    validation_size: 0.25
     random_state: 42
 
   features:
@@ -35,6 +36,7 @@ intermediate_data_layer_pipeline:
 primary_data_layer_pipeline:
   split_data:
     test_size: 0.2
+    validation_size: 0.25
     random_state: 42
 
   features:
@@ -62,6 +64,7 @@ primary_data_layer_pipeline:
 feature_data_layer_pipeline:
   split_data:
     test_size: 0.2
+    validation_size: 0.25
     random_state: 42
 
   features:
