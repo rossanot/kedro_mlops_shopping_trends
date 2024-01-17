@@ -132,10 +132,8 @@ def _encode_age(df: pd.DataFrame) -> pd.DataFrame:
     group_c = df.loc[(df['Age'] > 44) & (df['Age'] <= 57)].index.to_list()
     group_d = df.loc[df['Age'] > 57].index.to_list()
 
-    df['Age'] = df['Age'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
-    codes = ['a', 'b', 'c', 'd']
-    for code, group in zip(codes, groups):
+    for code, group in enumerate(groups):
         df.loc[group, 'Age'] = code
 
     return df
@@ -154,10 +152,8 @@ def _encode_purchase_amount(df: pd.DataFrame) -> pd.DataFrame:
                      & (df['Purchase Amount (USD)'] <= 81.)].index.to_list()
     group_d = df.loc[(df['Purchase Amount (USD)'] > 81.)].index.to_list()
 
-    df['Purchase Amount (USD)'] = df['Purchase Amount (USD)'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
-    codes = ['a', 'b', 'c', 'd']
-    for code, group in zip(codes, groups):
+    for code, group in enumerate(groups):
         df.loc[group, 'Purchase Amount (USD)'] = code
 
     return df
@@ -176,12 +172,10 @@ def _encode_previous_purchase(df: pd.DataFrame) -> pd.DataFrame:
                      & (df['Previous Purchases'] <= 38)].index.to_list()
     group_d = df.loc[df['Previous Purchases'] > 38].index.to_list()
 
-    df['Previous Purchases'] = df['Previous Purchases'].astype('object')
     groups = [group_a, group_b, group_c, group_d]
-    codes = ['a', 'b', 'c', 'd']
-    for code, group in zip(codes, groups):
+    for code, group in enumerate(groups):
         df.loc[group, 'Previous Purchases'] = code
-
+    
     return df
 
 
@@ -204,7 +198,7 @@ def _encode_review_rating(df: pd.DataFrame) -> pd.DataFrame:
 # Get intermediate
 # Clean columns
 def get_intermediate(df: pd.DataFrame) -> pd.DataFrame:
-    """Encode features
+    """Encode label and clean features
     
     Encode raw df and generate the intermediate data layer
     :param df: a pd.DataFrame
@@ -233,7 +227,7 @@ def get_primary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_feature(df: pd.DataFrame) -> pd.DataFrame:
-    """Encode features
+    """Encode numerical features
     
     Encode raw df and generate the feature data layer
     :param df: a pd.DataFrame
@@ -273,7 +267,6 @@ def split_data(df: pd.DataFrame, params: Dict, features: Dict) -> Tuple:
 
 
 # Encode using Ordinal encoder
-# Encode as arrays
 def get_model_input(
         X_train: pd.DataFrame,
         X_val: pd.DataFrame,
@@ -288,8 +281,7 @@ def get_model_input(
     """
     _X_train, _X_val, _X_test = X_train.copy(), X_val.copy(), X_test.copy()
 
-    features = features['categorical'] + features['numerical']
-    for feature in features:
+    for feature in features['categorical']:
         oec = OrdinalEncoder(
             handle_unknown='use_encoded_value',
             unknown_value=np.nan
@@ -306,7 +298,7 @@ def get_model_input(
         _X_val = _X_val.dropna()
         _X_test = _X_test.dropna()
     
-    logger.info('During encoding, were dropped:') 
+    logger.info('During encoding, were dropped:')
     logger.info('{} rows from X_val and {} rows from X_test'.format(
         X_val.shape[0]-_X_val.shape[0], X_test.shape[0]-_X_test.shape[0]))
     

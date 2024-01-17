@@ -67,7 +67,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
     model_input1 = pipeline(
         pipe=encode_pipeline,
-        inputs={'input_data': 'shopping_raw'},
+        inputs={'input_data': 'shopping_02_intermediate'},
         outputs={
             'X_train': 'X_train_intermediate',
             'X_val': 'X_val_intermediate',
@@ -81,7 +81,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     
     model_input2 = pipeline(
         pipe=encode_pipeline,
-        inputs={'input_data': 'shopping_02_intermediate'},
+        inputs={'input_data': 'shopping_03_primary'},
         outputs={
             'X_train': 'X_train_primary',
             'X_val': 'X_val_primary',
@@ -95,7 +95,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     
     model_input3 = pipeline(
         pipe=encode_pipeline,
-        inputs={'input_data': 'shopping_03_primary'},
+        inputs={'input_data': 'shopping_04_feature'},
         outputs={
             'X_train': 'X_train_feature',
             'X_val': 'X_val_feature',
