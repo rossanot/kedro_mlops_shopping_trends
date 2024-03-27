@@ -5,29 +5,95 @@
 # Kaggle Raw dataset
 shopping_raw:
   type: pandas.CSVDataset
-  filepath: ./data/01_raw/shopping_trends_updated.csv
+  filepath: ./data/01_raw/shopping_trends.csv
 
 # Intermediate dataset
 shopping_02_intermediate:
   type: pandas.ParquetDataSet
   filepath: ./data/02_intermediate/shopping_intermediate.parquet
 
-# split_data
-X_train:
+# Primary dataset
+shopping_03_primary:
   type: pandas.ParquetDataSet
-  filepath: ./data/03_primary/X_train.parquet
+  filepath: ./data/03_primary/shopping_primary.parquet
 
-X_test:
+# Feature dataset
+shopping_04_feature:
   type: pandas.ParquetDataSet
-  filepath: ./data/03_primary/X_test.parquet
+  filepath: ./data/04_feature/shopping_feature.parquet
 
-y_train:
+# Model_data
+X_train_intermediate:
   type: pandas.ParquetDataSet
-  filepath: ./data/03_primary/y_train.parquet
+  filepath: ./data/05_model_input/X_train_intermediate.parquet
 
-y_test:
+X_val_intermediate:
   type: pandas.ParquetDataSet
-  filepath: ./data/03_primary/y_test.parquet
+  filepath: ./data/05_model_input/X_val_intermediate.parquet
+
+X_test_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_test_intermediate.parquet
+
+y_train_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_train_intermediate.parquet
+
+y_val_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_val_intermediate.parquet
+
+y_test_intermediate:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_intermediate.parquet
+
+X_train_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_train_primary.parquet
+
+X_val_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_val_primary.parquet
+
+X_test_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_test_primary.parquet
+
+y_train_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_train_primary.parquet
+
+y_val_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_val_primary.parquet
+
+y_test_primary:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_primary.parquet
+
+X_train_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_train_feature.parquet
+
+X_val_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_val_feature.parquet
+
+X_test_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/X_test_feature.parquet
+
+y_train_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_train_feature.parquet
+
+y_val_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_val_feature.parquet
+
+y_test_feature:
+  type: pandas.ParquetDataSet
+  filepath: ./data/05_model_input/y_test_feature.parquet
 
 # EDA on raw dataset
 shopping_raw_stats:

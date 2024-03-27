@@ -5,28 +5,100 @@
 # Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
 # 
 # Based on Kedro starters https://github.com/kedro-org/kedro-starters.git
-split_data:
-  test_size: 0.2
-  random_state: 42
+intermediate_data_layer_pipeline:
+  split_data:
+    test_size: 0.2
+    validation_size: 0.25
+    random_state: 42
 
-features:
-  categorical:
-    - Gender
-    - Item Purchased
-    - Category
-    - Location
-    - Size
-    - Color
-    - Season
-    - Subscription Status
-    - Shipping Type
-    - Discount Applied
-    - Promo Code Used
-    - Payment Method
-    - Frequency of Purchases
-  numerical:
-  - Age
-  - Purchase Amount (USD)
-  - Previous Purchases
-  target:
-    - Review Rating
+  features:
+    categorical:
+      - Gender
+      - Item Purchased
+      - Category
+      - Location
+      - Size
+      - Color
+      - Season
+      - Shipping Type
+      - Discount Applied
+      - Promo Code Used
+      - Payment Method
+      - Preferred Payment Method
+      - Frequency of Purchases
+    numerical:
+      - Age
+      - Purchase Amount (USD)
+      - Previous Purchases
+      - Review Rating
+    target:
+      - Subscription Status
+
+primary_data_layer_pipeline:
+  split_data:
+    test_size: 0.2
+    validation_size: 0.25
+    random_state: 42
+
+  features:
+    categorical:
+      - Gender
+      - Item Purchased
+      - Category
+      - Location
+      - Size
+      - Color
+      - Season
+      - Shipping Type
+      - Discount Applied
+      - Promo Code Used
+      - Payment Method
+      - Preferred Payment Method
+      - Frequency of Purchases
+      - Review_Groups
+      - Location_Regions
+      - Color_Groups
+      - Item_Groups
+    numerical:
+      - Age
+      - Purchase Amount (USD)
+      - Previous Purchases
+      - Review Rating
+    target:
+      - Subscription Status
+
+feature_data_layer_pipeline:
+  split_data:
+    test_size: 0.2
+    validation_size: 0.25
+    random_state: 42
+
+  features:
+    categorical:
+      - Gender
+      - Item Purchased
+      - Category
+      - Location
+      - Size
+      - Color
+      - Season
+      - Shipping Type
+      - Discount Applied
+      - Promo Code Used
+      - Payment Method
+      - Preferred Payment Method
+      - Frequency of Purchases
+      - Review_Groups
+      - Location_Regions
+      - Color_Groups
+      - Item_Groups
+      - Age_Groups
+      - Purchase_Groups
+      - Previous_Groups
+    numerical:
+      - Age
+      - Purchase Amount (USD)
+      - Previous Purchases
+      - Review Rating
+    target:
+      - Subscription Status
