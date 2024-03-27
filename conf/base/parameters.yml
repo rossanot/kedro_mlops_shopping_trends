@@ -1,4 +1,4 @@
 kaggle_parms:
   user: 'iamsouravbanerjee'
   dataset_name: 'customer-shopping-trends-dataset'
-  file_name: 'shopping_trends_updated.csv'
+  file_name: 'shopping_trends.csv'

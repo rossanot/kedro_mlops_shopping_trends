@@ -5,7 +5,7 @@
 # Kaggle Raw dataset
 shopping_raw:
   type: pandas.CSVDataset
-  filepath: ./data/01_raw/shopping_trends_updated.csv
+  filepath: ./data/01_raw/shopping_trends.csv
 
 # Intermediate dataset
 shopping_02_intermediate:
