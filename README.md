@@ -9,6 +9,9 @@ Nowadays customers decide where to spend their money based on review ratings pos
 Predicting the review rating of a customer could let the clothing company take immediate action to prevent a bad rating or further positive enagagement of the customer. For example, the store staff could offer a discount, cupon, or any other complementary service at the checkout.
 
 
+![Dataset Insight](docs/figures/readme_plots1.png)
+
+
 ## Overview
 
 This is your new Kedro project, which was generated using `kedro 0.18.14`.
