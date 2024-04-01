@@ -76,6 +76,14 @@ def train_baseline(X_train, X_test, y_train, y_test):
     model_evaluate(trained_model, X_test, y_test)
     return trained_model
 
-def train_feature_sel():
-    pass
+
+def train_feature_select(X_train, X_test, y_train, y_test):
+    features = top_feats_mutual(X_train, y_train)
+    
+    trained_model = model_train(
+        DecisionTreeClassifier, X_train[features], y_train)
+    model_evaluate(trained_model, X_test[features], y_test)
+
+    logger.info('Top features: {}'.format(features))
+    return trained_model
 

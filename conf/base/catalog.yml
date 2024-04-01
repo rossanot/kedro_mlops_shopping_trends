@@ -168,6 +168,11 @@ dt_baseline_feature:
   filepath: data/06_models/dt_baseline_feat.pickle
   versioned: true
 
+dt_feature_selection_inter:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_feature_selection_inter.pickle
+  versioned: true
+
 dt_baseline_scores:
   type: text.TextDataSet
   filepath: ./data/08_reporting/dt_baseline_scores.txt
