@@ -151,3 +151,23 @@ shopping_raw_hist_rating:
 shopping_raw_correlation:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_correlation.jpeg
+
+#Classifiers
+dt_baseline_inter:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_inter.pickle
+  versioned: true
+
+dt_baseline_primary:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_primary.pickle
+  versioned: true
+
+dt_baseline_feature:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_feat.pickle
+  versioned: true
+
+dt_baseline_scores:
+  type: text.TextDataSet
+  filepath: ./data/08_reporting/dt_baseline_scores.txt
