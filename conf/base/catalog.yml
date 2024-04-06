@@ -169,17 +169,35 @@ dt_baseline_feature:
   filepath: data/06_models/dt_baseline_feat.pickle
   versioned: true
 
-# Feature selection
-dt_feature_selection_inter:
+# cross-validation with feature selection
+dt_cv_inter:
   type: pickle.PickleDataset
-  filepath: data/06_models/dt_feature_selection_inter.pickle
+  filepath: data/06_models/dt_cv_inter.pickle
   versioned: true
 
-# Models scores files
+## Feature selection
+dt_cv_features:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/dt_cv_features.yaml
+
+## Predictions
+dt_baseline_y_predicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_baseline_y_pred.pickle
+
+dt_cv_y_predicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_cv_y_pred.pickle
+
+## Model scores
 dt_baseline_scores:
   type: pandas.JSONDataSet
-  filepath: ./data/08_reporting/dt_baseline_scores.json
+  filepath: ./data/07_model_output/dt_baseline_val_scores.json
 
-dt_feature_selection_scores:
+dt_cv_scores:
   type: pandas.JSONDataSet
-  filepath: ./data/08_reporting/dt_baseline_scores.json
+  filepath: ./data/07_model_output/dt_cv_val_scores.json
+
+dt_cv_test_scores:
+  type: pandas.JSONDataSet
+  filepath: ./data/07_model_output/dt_cv_test_scores.json

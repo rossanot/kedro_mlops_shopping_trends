@@ -4,7 +4,11 @@ generated using Kedro 0.18.14
 """
 
 from kedro.pipeline import Pipeline, pipeline, node
-from .nodes import (model_train, model_evaluate, train_feature_select)
+from .nodes import (model_train,
+                    model_predict,
+                    model_evaluate,
+                    get_reduced_x,
+                    grid_search)
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -21,38 +25,51 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name='train_baseline'
                 ),
             node(
-                func=model_evaluate,
+                func=model_predict,
                 inputs=[
                     'model_output',
-                    'X_val',
-                    'y_val',
+                    'X_val'
                 ],
-                outputs='scores_output',
-                name='evaluate_baseline'
+                outputs='y_predicted',
+                name='baseline_predictions'
             )
         ]),
-    feature_selection = pipeline(
+    cross_validation = pipeline(
         [
             node(
-                func=train_feature_select,
+                func=get_reduced_x,
                 inputs=[
-                    'params:classifier',
                     'X_train',
                     'X_val',
                     'y_train',
                 ],
-                outputs=['model_output', '_X_val'],
-                name='train_feature_selection',
+                outputs=[
+                    '_X_train',
+                    '_X_val',
+                    'features',
+                ],
+                name='feature_selection',
             ),
             node(
-                func=model_evaluate,
+                func=grid_search,
+                inputs=[
+                    'params:classifier',
+                    '_X_train',
+                    'y_train',
+                    'params:hyperparams',
+                    'params:kfold'
+                ],
+                outputs='model_output',
+                name='evaluate_select_features'
+            ),
+            node(
+                func=model_predict,
                 inputs=[
                     'model_output',
                     '_X_val',
-                    'y_val',
                 ],
-                outputs='scores_output',
-                name='evaluate_select_features'
+                outputs='y_predicted',
+                name='cross_validation_predictions'
             )
             ]
             )
@@ -63,28 +80,27 @@ def create_pipeline(**kwargs) -> Pipeline:
             'X_train': 'X_train_intermediate',
             'X_val': 'X_val_intermediate',
             'y_train': 'y_train_intermediate',
-            'y_val': 'y_val_intermediate'
             },
         outputs={
             'model_output': 'dt_baseline_inter',
-            'scores_output': 'dt_baseline_scores'
+            'y_predicted': 'dt_baseline_y_predicted'
             },
-        namespace='baseline'
+        namespace='model_intermediate'
         )
 
-    feature_select_inter = pipeline(
-        pipe=feature_selection,
+    cross_validation_train = pipeline(
+        pipe=cross_validation,
         inputs={
             'X_train': 'X_train_intermediate',
             'X_val': 'X_val_intermediate',
-            'y_train': 'y_train_intermediate',
-            'y_val': 'y_val_intermediate',
+            'y_train': 'y_train_intermediate'
             },
         outputs={
-            'model_output': 'dt_feature_selection_inter',
-            'scores_output': 'dt_feature_selection_scores'
+            'features': 'dt_cv_features',
+            'model_output': 'dt_cv_inter',
+            'y_predicted': 'dt_cv_y_predicted'
             },
-        namespace='feature_selection'
+        namespace='model_intermediate'
         )
 
-    return baseline_inter + feature_select_inter
+    return baseline_inter + cross_validation_train
