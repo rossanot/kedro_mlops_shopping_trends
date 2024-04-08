@@ -151,3 +151,53 @@ shopping_raw_hist_rating:
 shopping_raw_correlation:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_correlation.jpeg
+
+# Trained models
+# Baseline
+dt_baseline_inter:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_inter.pickle
+  versioned: true
+
+dt_baseline_primary:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_primary.pickle
+  versioned: true
+
+dt_baseline_feature:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_baseline_feat.pickle
+  versioned: true
+
+# cross-validation with feature selection
+dt_cv_inter:
+  type: pickle.PickleDataset
+  filepath: data/06_models/dt_cv_inter.pickle
+  versioned: true
+
+## Feature selection
+dt_cv_features:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/dt_cv_features.yaml
+
+## Predictions
+dt_baseline_y_predicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_baseline_y_pred.pickle
+
+dt_cv_y_predicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_cv_y_pred.pickle
+
+## Model scores
+dt_baseline_scores:
+  type: pandas.JSONDataSet
+  filepath: ./data/07_model_output/dt_baseline_val_scores.json
+
+dt_cv_scores:
+  type: pandas.JSONDataSet
+  filepath: ./data/07_model_output/dt_cv_val_scores.json
+
+dt_cv_test_scores:
+  type: pandas.JSONDataSet
+  filepath: ./data/07_model_output/dt_cv_test_scores.json
