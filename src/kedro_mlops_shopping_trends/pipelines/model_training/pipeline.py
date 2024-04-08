@@ -97,7 +97,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             },
         outputs={
             'model_output': 'dt_baseline_inter',
-            'y_predicted': 'dt_baseline_val_ypredicted'
+            'y_predicted': 'dt_baseline_val_ypredicted_inter'
             },
         namespace='model_intermediate'
         )
@@ -111,10 +111,10 @@ def create_pipeline(**kwargs) -> Pipeline:
             'y_train': 'y_train_intermediate'
             },
         outputs={
-            'features': 'dt_cv_features',
-            'model_output': 'dt_cv_inter',
-            'y_val_predicted': 'dt_cv_val_ypredicted',
-            'y_test_predicted': 'dt_cv_test_ypredicted'
+            'features': 'dt_cv_features_inter',
+            'model_output': 'dt_cv_inter_inter',
+            'y_val_predicted': 'dt_cv_val_ypredicted_inter',
+            'y_test_predicted': 'dt_cv_test_ypredicted_inter'
             },
         namespace='model_intermediate'
         )

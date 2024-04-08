@@ -8,6 +8,12 @@ from sklearn.metrics import (f1_score,
                              accuracy_score,
                              recall_score
                              )
+from sklearn.metrics import (confusion_matrix,
+                             ConfusionMatrixDisplay,
+                             roc_curve,
+                             auc,
+                             RocCurveDisplay)
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -36,3 +42,34 @@ def model_evaluate(
          'Accuracy': acc,
          'Recall': recall}, index=[0]
         )
+
+
+def conf_matrix(
+        y_true: pd.DataFrame,
+        y_predicted: pd.DataFrame
+        ):
+    
+    cm = confusion_matrix(y_true,
+                          y_predicted
+                          )
+    
+    disp = ConfusionMatrixDisplay(cm)
+    return disp.plot().figure_
+    
+
+def auc_roc(
+        y_true: pd.DataFrame,
+        y_predicted: pd.DataFrame
+        ):
+
+    fpr, tpr, _ = roc_curve(
+        y_true,
+        y_predicted)
+
+    roc_auc = auc(fpr, tpr)
+    disp = RocCurveDisplay(
+        fpr=fpr,
+        tpr=tpr,
+        roc_auc=roc_auc)
+
+    return disp.plot().figure_
