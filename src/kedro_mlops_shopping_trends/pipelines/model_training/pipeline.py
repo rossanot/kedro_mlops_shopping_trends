@@ -6,7 +6,7 @@ generated using Kedro 0.18.14
 from kedro.pipeline import Pipeline, pipeline, node
 from .nodes import (model_train,
                     model_predict,
-                    model_evaluate,
+                    top_feats_mutual,
                     get_reduced_x,
                     grid_search)
 
@@ -30,25 +30,35 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'model_output',
                     'X_val'
                 ],
-                outputs='y_predicted',
+                outputs=['y_predicted'],
                 name='baseline_predictions'
             )
         ]),
     cross_validation = pipeline(
         [
             node(
-                func=get_reduced_x,
+                func=top_feats_mutual,
                 inputs=[
                     'X_train',
+                    'y_train'
+                    ],
+                outputs='features',
+                name='feature_selection'
+            ),
+            node(
+                func=get_reduced_x,
+                inputs=[
+                    'features',
+                    'X_train',
                     'X_val',
-                    'y_train',
+                    'X_test'
                 ],
                 outputs=[
                     '_X_train',
                     '_X_val',
-                    'features',
+                    '_X_test'
                 ],
-                name='feature_selection',
+                name='x_reduction'
             ),
             node(
                 func=grid_search,
@@ -67,8 +77,12 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=[
                     'model_output',
                     '_X_val',
+                    '_X_test',
                 ],
-                outputs='y_predicted',
+                outputs=[
+                    'y_val_predicted',
+                    'y_test_predicted'
+                    ],
                 name='cross_validation_predictions'
             )
             ]
@@ -83,24 +97,26 @@ def create_pipeline(**kwargs) -> Pipeline:
             },
         outputs={
             'model_output': 'dt_baseline_inter',
-            'y_predicted': 'dt_baseline_y_predicted'
+            'y_predicted': 'dt_baseline_val_ypredicted'
             },
         namespace='model_intermediate'
         )
 
-    cross_validation_train = pipeline(
+    cv_train_inter = pipeline(
         pipe=cross_validation,
         inputs={
             'X_train': 'X_train_intermediate',
             'X_val': 'X_val_intermediate',
+            'X_test': 'X_test_intermediate',
             'y_train': 'y_train_intermediate'
             },
         outputs={
             'features': 'dt_cv_features',
             'model_output': 'dt_cv_inter',
-            'y_predicted': 'dt_cv_y_predicted'
+            'y_val_predicted': 'dt_cv_val_ypredicted',
+            'y_test_predicted': 'dt_cv_test_ypredicted'
             },
         namespace='model_intermediate'
         )
 
-    return baseline_inter + cross_validation_train
+    return baseline_inter + cv_train_inter

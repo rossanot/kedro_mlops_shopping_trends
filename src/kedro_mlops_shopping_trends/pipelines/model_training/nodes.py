@@ -4,7 +4,7 @@ generated using Kedro 0.18.14
 """
 import logging
 
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 import numpy as np
 import pandas as pd
@@ -16,10 +16,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
-from sklearn.metrics import (f1_score,
-                             accuracy_score,
-                             recall_score
-                             )
 from sklearn.model_selection import (GridSearchCV,
                                      KFold,
                                      StratifiedKFold)
@@ -60,47 +56,25 @@ def model_train(
 
 def model_predict(
         model: sklearn.base.BaseEstimator,
-        X_test: pd.DataFrame
+        *args
         ) -> pd.DataFrame:
     """ Make predictions
 
     :param model: trained classifier
     :param X_test: test pd.DataFrame
     """
-    return pd.DataFrame(model.predict(X_test))
-
-
-def model_evaluate(
-        y_predicted: pd.DataFrame,
-        y_test: pd.DataFrame,
-        ) -> Dict:
-    """Evaluate classifier
-
-    :param y_predicted: predicted labels pd.DataFrame
-    :param y_test: true labels pd.DataFrame
-    :return: scores Dict
-    """
+    dfs = []
+    for df in args:
+        dfs.append(pd.DataFrame(model.predict(df)))
     
-    fscore = f1_score(y_test.to_numpy(), y_predicted)
-    acc = accuracy_score(y_test.to_numpy(), y_predicted)
-    recall = recall_score(y_test.to_numpy(), y_predicted)
-
-    logger.info('F-score: {:.3f}'.format(fscore))
-    logger.info('Accuracy: {:.3f}'.format(acc))
-    logger.info('Recall: {:.3f}'.format(recall))
-    
-    return pd.DataFrame(
-        {'F1-score': fscore,
-         'Accuracy': acc,
-         'Recall': recall}, index=[0]
-        )
+    return dfs
 
 
-def _top_feats_mutual(
+def top_feats_mutual(
         X_train: pd.DataFrame,
         y_train: pd.DataFrame,
         max_number: int = 14,
-        ) -> np.array:
+        ) -> Dict:
     """Select top features using mutual information method
     """
     feature_imp = mutual_info_classif(
@@ -110,23 +84,26 @@ def _top_feats_mutual(
 
     columns_all = X_train.columns.to_numpy()
 
-    return columns_all[np.argsort(feature_imp)[-max_number:]]
+    columns_red = columns_all[np.argsort(feature_imp)[-max_number:]]
+    return {'features': columns_red.tolist()}
 
 
 def get_reduced_x(
-        X_train: pd.DataFrame,
-        X_test: pd.DataFrame,
-        y_train: pd.DataFrame
-        ) -> Tuple:
+        features: Dict,
+        *args
+        ) -> List:
     """Reduce datasets using top features
 
     :param X_train: train pd.DataFrame
     :param X_test: test pd.DataFrame
     :return: reduced datasets
     """
-    columns = _top_feats_mutual(X_train, y_train)
+    
+    dfs_red = []
+    for df in args:
+        dfs_red.append(df[features['features']])
 
-    return X_train[columns], X_test[columns], {'features': columns.tolist()}
+    return dfs_red
 
 
 def grid_search(
