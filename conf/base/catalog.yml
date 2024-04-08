@@ -180,21 +180,26 @@ dt_cv_features:
   type: yaml.YAMLDataset
   filepath: data/07_model_output/dt_cv_features.yaml
 
-## Predictions
-dt_baseline_y_predicted:
-  type: pandas.ParquetDataSet
-  filepath: ./data/07_model_output/dt_baseline_y_pred.pickle
 
-dt_cv_y_predicted:
+## Predictions
+dt_baseline_val_ypredicted:
   type: pandas.ParquetDataSet
-  filepath: ./data/07_model_output/dt_cv_y_pred.pickle
+  filepath: ./data/07_model_output/dt_baseline_ypred.pickle
+
+dt_cv_val_ypredicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_cv_val_ypred.pickle
+
+dt_cv_test_ypredicted:
+  type: pandas.ParquetDataSet
+  filepath: ./data/07_model_output/dt_cv_test_ypred.pickle 
 
 ## Model scores
 dt_baseline_scores:
   type: pandas.JSONDataSet
   filepath: ./data/07_model_output/dt_baseline_val_scores.json
 
-dt_cv_scores:
+dt_cv_val_scores:
   type: pandas.JSONDataSet
   filepath: ./data/07_model_output/dt_cv_val_scores.json
 
