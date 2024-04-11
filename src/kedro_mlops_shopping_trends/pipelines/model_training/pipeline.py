@@ -70,7 +70,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'params:kfold'
                 ],
                 outputs='model_output',
-                name='evaluate_select_features'
+                name='cross_validation_grid_search'
             ),
             node(
                 func=model_predict,
@@ -112,7 +112,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             },
         outputs={
             'features': 'dt_cv_features_inter',
-            'model_output': 'dt_cv_inter_inter',
+            'model_output': 'dt_cv_inter',
             'y_val_predicted': 'dt_cv_val_ypredicted_inter',
             'y_test_predicted': 'dt_cv_test_ypredicted_inter'
             },
