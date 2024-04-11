@@ -11,18 +11,33 @@ Target: `Subscription Status`
     - `data_acquisition` using Kaggle API.
     - `data_processing`
     - `model_training`
+        - baseline using Decision Tree
+        - implemented algorithms: 
+        ```
+        'Decision Tree': DecisionTreeClassifier,
+        'XGBoost': XGBClassifier,
+        'Logistic Regression': LogisticRegression,
+        'KNN': KNeighborsClassifier,
+        'Naive Bayes': GaussianNB,
+        'SVM': svm
+        ```
     - `model_validation`
     
-    which can be run separately as:
+    that can be run separately as:
     ```
     kedro run --pipeline pipeline_item
     ```
-- Data exploration using a Streamlit dashboard, which can be invoked by:
+
+![Kedro intermediate data layer pipeline](./docs/figures/kedro_intermediate_pipeline_clear_01.png)
+- Data exploration using a Streamlit dashboard, which can be invoked through:
+
     ```
     streamlit run streamlit-entry.py
     ```
 
-Note: `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they were obtained with the objective of exploring the usage of those data layers in a project. ML pipelines only use the `02_intermediate` dataset.
+![Subscription Status Distribution](./docs/figures/streamlit_dashboard_01.png)
+
+Note: `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline with the objective of exploring the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
 
 ## Notes about installation
 Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
