@@ -1,7 +1,7 @@
 [tool.kedro]
 package_name = "kedro_mlops_shopping_trends"
 project_name = "kedro_mlops_shopping_trends"
-kedro_init_version = "0.18.14"
+kedro_init_version = "0.19.8"
 
 [tool.isort]
 profile = "black"
@@ -15,3 +15,6 @@ addopts = """
 fail_under = 0
 show_missing = true
 exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.kedro_telemetry]
+project_id = "6d7a553d01c34406b51991b8f072da97"

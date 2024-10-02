@@ -9,95 +9,95 @@ shopping_raw:
 
 # Intermediate dataset
 shopping_02_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/02_intermediate/shopping_intermediate.parquet
 
 # Primary dataset
 shopping_03_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/03_primary/shopping_primary.parquet
 
 # Feature dataset
 shopping_04_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/04_feature/shopping_feature.parquet
 
 # Model_data
 X_train_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_train_intermediate.parquet
 
 X_val_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_val_intermediate.parquet
 
 X_test_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_test_intermediate.parquet
 
 y_train_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_train_intermediate.parquet
 
 y_val_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_val_intermediate.parquet
 
 y_test_intermediate:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_test_intermediate.parquet
 
 X_train_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_train_primary.parquet
 
 X_val_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_val_primary.parquet
 
 X_test_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_test_primary.parquet
 
 y_train_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_train_primary.parquet
 
 y_val_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_val_primary.parquet
 
 y_test_primary:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_test_primary.parquet
 
 X_train_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_train_feature.parquet
 
 X_val_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_val_feature.parquet
 
 X_test_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/X_test_feature.parquet
 
 y_train_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_train_feature.parquet
 
 y_val_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_val_feature.parquet
 
 y_test_feature:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/05_model_input/y_test_feature.parquet
 
 # EDA on raw dataset
 shopping_raw_stats:
-  type: text.TextDataSet
+  type: text.TextDataset
   filepath: ./data/08_reporting/eda_raw_stats.txt
 
 shopping_raw_hbar:
@@ -183,28 +183,28 @@ dt_cv_features_inter:
 
 ## Predictions
 dt_baseline_val_ypredicted_inter:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/07_model_output/dt_baseline_ypred_inter.pickle
 
 dt_cv_val_ypredicted_inter:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/07_model_output/dt_cv_val_ypred_inter.pickle
 
 dt_cv_test_ypredicted_inter:
-  type: pandas.ParquetDataSet
+  type: pandas.ParquetDataset
   filepath: ./data/07_model_output/dt_cv_test_ypred_inter.pickle 
 
 ## Model scores
 dt_baseline_scores_inter:
-  type: pandas.JSONDataSet
+  type: pandas.JSONDataset
   filepath: ./data/07_model_output/dt_baseline_val_scores_inter.json
 
 dt_cv_val_scores_inter:
-  type: pandas.JSONDataSet
+  type: pandas.JSONDataset
   filepath: ./data/07_model_output/dt_cv_val_scores_inter.json
 
 dt_cv_test_scores_inter:
-  type: pandas.JSONDataSet
+  type: pandas.JSONDataset
   filepath: ./data/07_model_output/dt_cv_test_scores_inter.json
 
 # Confusion Matrix
