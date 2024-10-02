@@ -3,3 +3,26 @@
 #
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
+
+model_intermediate:
+  classifier: Decision Tree
+  kfold: True
+  hyperparams:
+    criterion: ['gini', 'entropy', 'log_loss']
+    splitter: ['best', 'random']
+    max_depth: [2, 4, 8]
+
+# model_intermediate:
+#   classifier: XGBoost
+#   kfold: False
+#   hyperparams:
+#     eta: [0.01, 0.1, 0.2, 0.6, 0.8, 1.0]
+#     n_estimators: [2, 4, 8, 16, 32, 64, 100]
+#     max_depth: [2, 4, 8, 12, 16, 20, 24]
+
+# model_intermediate:
+#   classifier: Logistic Regression
+#   kfold: True
+#   hyperparams:
+#     max_iter: [10_000]
+#     C: [0.02, 0.04, 0.06, 0.08]

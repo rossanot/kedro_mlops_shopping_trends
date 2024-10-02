@@ -1,16 +1,4 @@
-# **Prediction of Shopping Review Ratings**
-# **Implementation of a ML Pipeline Using Kedro** 
-
-## **Business Case**
-Use case: Predict the review rating of a customer.
-Target: `Review Rating`
-Nowadays customers decide where to spend their money based on review ratings posted on social media, for example, Google reviews. A bad review rating could translate into financial loses to a business.
-
-Predicting the review rating of a customer could let the clothing company take immediate action to prevent a bad rating or further positive enagagement of the customer. For example, the store staff could offer a discount, cupon, or any other complementary service at the checkout.
-
-
-![Dataset Insight](docs/figures/readme_plots1.png)
-
+# **README.md content of the original Kedro project**
 
 ## Overview
 
@@ -132,12 +120,4 @@ To automatically strip out all output cell contents before committing to `git`, 
 ## Package your Kedro project
 
 [Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
-
-## Notes about installation
-Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
-
-```
-pip install kedro-datasets[pandas.ParquetDataset]
-pip install kedro-datasets[matplotlib.MatplotlibWriter]
-```
 

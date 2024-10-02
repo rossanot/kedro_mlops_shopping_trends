@@ -10,6 +10,7 @@ st.title('Shopping Patterns USA Dataset')
 st.sidebar.title('Data Visualization')
 
 # Pick dataset
+# Pick features
 dfs = {
     'Raw Dataset': [
         'shopping_raw',
