@@ -29,7 +29,7 @@ models = {
     'XGBoost': XGBClassifier,
     'Logistic Regression': LogisticRegression,
     'KNN': KNeighborsClassifier,
-    'Naïve Bayes': GaussianNB,
+    'Naive Bayes': GaussianNB,
     'SVM': svm
     }
 
