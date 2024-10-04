@@ -2,12 +2,9 @@
 This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
-from pathlib import Path
-from kedro.config import OmegaConfigLoader
-from kedro.framework.project import settings
-
 from typing import Dict
 import pandas as pd
+from model_training.utils import data_layer
 from sklearn.metrics import (f1_score,
                              accuracy_score,
                              recall_score
@@ -21,10 +18,7 @@ from sklearn.metrics import (confusion_matrix,
 import logging
 logger = logging.getLogger(__name__)
 
-PATH = './'
-conf_path = str(Path(PATH) / settings.CONF_SOURCE)
-conf_loader = OmegaConfigLoader(conf_source=conf_path)
-stage = conf_loader['parameters']['model_training']['dataset_stage']
+stage = data_layer()
 steps = {'intermediate': 0, 'primary': 1, 'feature': 2}
 
 
@@ -38,6 +32,7 @@ def model_evaluate(
     :param y_true: true labels pd.DataFrame
     :return: scores Dict
     """
+    stage = data_layer()
 
     fscore = f1_score(y_true.to_numpy(), y_predicted)
     acc = accuracy_score(y_true.to_numpy(), y_predicted)

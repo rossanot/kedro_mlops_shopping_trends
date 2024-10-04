@@ -6,7 +6,7 @@
 
 model_training:
   classifier: Decision Tree
-  dataset_stage: primary
+  data_layer: primary # intermediate, primary, or feature
   kfold: True
   hyperparams:
     criterion: ['gini', 'entropy', 'log_loss']
@@ -15,6 +15,7 @@ model_training:
 
 # model_training:
 #   classifier: XGBoost
+    # data_layer: primary
 #   kfold: False
 #   hyperparams:
 #     eta: [0.01, 0.1, 0.2, 0.6, 0.8, 1.0]
@@ -23,6 +24,7 @@ model_training:
 
 # model_training:
 #   classifier: Logistic Regression
+  # data_layer: primary
 #   kfold: True
 #   hyperparams:
 #     max_iter: [10_000]

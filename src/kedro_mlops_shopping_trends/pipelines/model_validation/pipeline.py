@@ -2,53 +2,47 @@
 This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
-from pathlib import Path
-from kedro.config import OmegaConfigLoader
-from kedro.framework.project import settings
-
 from kedro.pipeline import Pipeline, pipeline, node
+from model_training.utils import data_layer
 from .nodes import (model_evaluate,
                     conf_matrix,
                     auc_roc)
 
-PATH = './'
-conf_path = str(Path(PATH) / settings.CONF_SOURCE)
-conf_loader = OmegaConfigLoader(conf_source=conf_path)
-stage = conf_loader['parameters']['model_training']['dataset_stage']
 
+layer = data_layer()
 
-stage_datasets = {
+layer_datasets = {
     'baseline': {
         'inputs': {
-            'y_true': 'y_val_' + stage,
-            'y_predicted': 'dt_baseline_val_ypredicted_' + stage
+            'y_true': 'y_val_' + layer,
+            'y_predicted': 'dt_baseline_val_ypredicted_' + layer
             },
         'outputs': {
-            'scores': 'dt_baseline_scores_' + stage,
-            'cm': 'dt_baseline_cm_val_' + stage,
-            'aucroc': 'dt_baseline_auc_val_' + stage
+            'scores': 'dt_baseline_scores_' + layer,
+            'cm': 'dt_baseline_cm_val_' + layer,
+            'aucroc': 'dt_baseline_auc_val_' + layer
             }
         },
     'cv_validation': {
         'inputs': {
-            'y_true': 'y_val_' + stage,
-            'y_predicted': 'dt_cv_val_ypredicted_' + stage
+            'y_true': 'y_val_' + layer,
+            'y_predicted': 'dt_cv_val_ypredicted_' + layer
             },
         'outputs': {
-            'scores': 'dt_cv_val_scores_' + stage,
-            'cm': 'dt_cv_cm_val_' + stage,
-            'aucroc': 'dt_cv_auc_val_' + stage
+            'scores': 'dt_cv_val_scores_' + layer,
+            'cm': 'dt_cv_cm_val_' + layer,
+            'aucroc': 'dt_cv_auc_val_' + layer
             }
         },
     'cv_test': {
         'inputs': {
-            'y_true': 'y_test_' + stage,
-            'y_predicted': 'dt_cv_test_ypredicted_' + stage
+            'y_true': 'y_test_' + layer,
+            'y_predicted': 'dt_cv_test_ypredicted_' + layer
             },
         'outputs': {
-            'scores': 'dt_cv_test_scores_' + stage,
-            'cm': 'dt_cv_cm_test_' + stage,
-            'aucroc': 'dt_cv_auc_test_' + stage
+            'scores': 'dt_cv_test_scores_' + layer,
+            'cm': 'dt_cv_cm_test_' + layer,
+            'aucroc': 'dt_cv_auc_test_' + layer
             }
             }
             }
@@ -77,10 +71,10 @@ def create_pipeline(**kwargs) -> Pipeline:
     eval_baseline = pipeline(
         pipe=evaluate,
         inputs={
-            **stage_datasets['baseline']['inputs']
+            **layer_datasets['baseline']['inputs']
             },
         outputs={
-            **stage_datasets['baseline']['outputs']
+            **layer_datasets['baseline']['outputs']
             },
         namespace='model_validation'
     )
@@ -88,10 +82,10 @@ def create_pipeline(**kwargs) -> Pipeline:
     eval_cv_val = pipeline(
         pipe=evaluate,
         inputs={
-            **stage_datasets['cv_validation']['inputs']
+            **layer_datasets['cv_validation']['inputs']
                 },
         outputs={
-            **stage_datasets['cv_validation']['outputs']
+            **layer_datasets['cv_validation']['outputs']
             },
         namespace='model_validation'
     )
@@ -99,10 +93,10 @@ def create_pipeline(**kwargs) -> Pipeline:
     eval_cv_test = pipeline(
         pipe=evaluate,
         inputs={
-            **stage_datasets['cv_test']['inputs'],
+            **layer_datasets['cv_test']['inputs'],
         },
         outputs={
-            **stage_datasets['cv_test']['outputs'],
+            **layer_datasets['cv_test']['outputs'],
             },
         namespace='model_validation'
     )
