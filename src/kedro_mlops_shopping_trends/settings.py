@@ -27,12 +27,12 @@ from kedro.config import OmegaConfigLoader  # noqa: import-outside-toplevel
 
 CONFIG_LOADER_CLASS = OmegaConfigLoader
 # Keyword arguments to pass to the `CONFIG_LOADER_CLASS` constructor.
-# CONFIG_LOADER_ARGS = {
-#       "config_patterns": {
-#           "spark" : ["spark*/"],
-#           "parameters": ["parameters*", "parameters*/**", "**/parameters*"],
-#       }
-# }
+CONFIG_LOADER_ARGS = {
+      "config_patterns": {
+          "spark" : ["spark*/"],
+          "parameters": ["parameters*", "parameters*/**", "**/parameters*"],
+      }
+}
 
 # Class that manages Kedro's library components.
 # from kedro.framework.context import KedroContext

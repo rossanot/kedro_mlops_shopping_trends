@@ -9,18 +9,24 @@ shopping_raw:
 
 # Intermediate dataset
 shopping_02_intermediate:
-  type: pandas.ParquetDataset
-  filepath: ./data/02_intermediate/shopping_intermediate.parquet
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pandas.ParquetDataset
+    filepath: ./data/02_intermediate/shopping_intermediate.parquet
 
 # Primary dataset
 shopping_03_primary:
-  type: pandas.ParquetDataset
-  filepath: ./data/03_primary/shopping_primary.parquet
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pandas.ParquetDataset
+    filepath: ./data/03_primary/shopping_primary.parquet
 
 # Feature dataset
 shopping_04_feature:
-  type: pandas.ParquetDataset
-  filepath: ./data/04_feature/shopping_feature.parquet
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pandas.ParquetDataset
+    filepath: ./data/04_feature/shopping_feature.parquet
 
 # Model_data
 X_train_intermediate:
@@ -154,9 +160,9 @@ shopping_raw_correlation:
 
 # Trained models
 # Baseline
-dt_baseline_inter:
+dt_baseline_intermediate:
   type: pickle.PickleDataset
-  filepath: data/06_models/dt_baseline_inter.pickle
+  filepath: data/06_models/dt_baseline_intermediate.pickle
   versioned: true
 
 dt_baseline_primary:
@@ -170,65 +176,213 @@ dt_baseline_feature:
   versioned: true
 
 # cross-validation with feature selection
-dt_cv_inter:
-  type: pickle.PickleDataset
-  filepath: data/06_models/dt_cv_inter.pickle
-  versioned: true
+dt_cv_intermediate:
+  type: kedro_mlflow.io.models.MlflowModelTrackingDataset
+  flavor: mlflow.sklearn
+  run_id: ${runtime_params:mlflow_run_id,null}
+  save_args:
+    registered_model_name: dt_cv_intermediate
+
+dt_cv_primary:
+  type: kedro_mlflow.io.models.MlflowModelTrackingDataset
+  flavor: mlflow.sklearn
+  run_id: ${runtime_params:mlflow_run_id,null}
+  save_args:
+    registered_model_name: dt_cv_primary
+
+dt_cv_feature:
+  type: kedro_mlflow.io.models.MlflowModelTrackingDataset
+  flavor: mlflow.sklearn
+  run_id: ${runtime_params:mlflow_run_id,null}
+  save_args:
+    registered_model_name: dt_cv_feature
 
 ## Feature selection
-dt_cv_features_inter:
+# intermediate
+dt_cv_features_intermediate:
   type: yaml.YAMLDataset
-  filepath: data/07_model_output/dt_cv_features_inter.yaml
+  filepath: data/07_model_output/dt_cv_features_intermediate.yaml
 
+# primary
+dt_cv_features_primary:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/dt_cv_features_primary.yaml
+
+# feature
+dt_cv_features_feature:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/dt_cv_features_feature.yaml
 
 ## Predictions
-dt_baseline_val_ypredicted_inter:
+# intermediate
+dt_baseline_val_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_baseline_ypred_inter.pickle
+  filepath: ./data/07_model_output/dt_baseline_ypred_intermediate.pickle
 
-dt_cv_val_ypredicted_inter:
+dt_cv_val_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_val_ypred_inter.pickle
+  filepath: ./data/07_model_output/dt_cv_val_ypred_intermediate.pickle
 
-dt_cv_test_ypredicted_inter:
+dt_cv_test_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_test_ypred_inter.pickle 
+  filepath: ./data/07_model_output/dt_cv_test_ypred_intermediate.pickle
+
+# primary
+dt_baseline_val_ypredicted_primary:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_baseline_ypred_primary.pickle
+
+dt_cv_val_ypredicted_primary:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_cv_val_ypred_primary.pickle
+
+dt_cv_test_ypredicted_primary:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_cv_test_ypred_primary.pickle
+
+# feature
+dt_baseline_val_ypredicted_feature:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_baseline_ypred_feature.pickle
+
+dt_cv_val_ypredicted_feature:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_cv_val_ypred_feature.pickle
+
+dt_cv_test_ypredicted_feature:
+  type: pandas.ParquetDataset
+  filepath: ./data/07_model_output/dt_cv_test_ypred_feature.pickle 
 
 ## Model scores
-dt_baseline_scores_inter:
-  type: pandas.JSONDataset
-  filepath: ./data/07_model_output/dt_baseline_val_scores_inter.json
+# intermediate
+dt_baseline_scores_intermediate:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+# Uncomment to save locally instead
+  #   type: pandas.JSONDataSet
+  #   filepath: ./data/07_model_output/dt_baseline_val_scores_intermediate.json
 
-dt_cv_val_scores_inter:
-  type: pandas.JSONDataset
-  filepath: ./data/07_model_output/dt_cv_val_scores_inter.json
+dt_cv_val_scores_intermediate:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+# Uncomment to save locally instead
+#   type: pandas.JSONDataset
+#   filepath: ./data/07_model_output/dt_cv_val_scores_intermediate.json
 
-dt_cv_test_scores_inter:
-  type: pandas.JSONDataset
-  filepath: ./data/07_model_output/dt_cv_test_scores_inter.json
+dt_cv_test_scores_intermediate:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+# Uncomment to save locally instead
+# and return pd.DataFrame from the corresponding node
+#   type: pandas.JSONDataset
+#   filepath: ./data/07_model_output/dt_cv_test_scores_intermediate.json
 
-# Confusion Matrix
-dt_baseline_cm_val_inter:
+# primary
+dt_baseline_scores_primary:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+dt_cv_val_scores_primary:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+dt_cv_test_scores_primary:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+# feature
+dt_baseline_scores_feature:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+dt_cv_val_scores_feature:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+dt_cv_test_scores_feature:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+
+## Confusion Matrix
+# intermediate
+dt_baseline_cm_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_inter.jpeg
+  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_intermediate.jpeg
 
-dt_cv_cm_val_inter:
+dt_cv_cm_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_inter.jpeg
+  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_intermediate.jpeg
 
-dt_cv_cm_test_inter:
-  type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_conf_matrix_test_inter.jpeg
+dt_cv_cm_test_intermediate:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_intermediate.jpeg
 
-# AUC
-dt_baseline_auc_val_inter:
+# primary
+dt_baseline_cm_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_auc_val_inter.jpeg
+  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_primary.jpeg
 
-dt_cv_auc_val_inter:
+dt_cv_cm_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_auc_val_inter.jpeg
+  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_primary.jpeg
 
-dt_cv_auc_test_inter:
+dt_cv_cm_test_primary:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_primary.jpeg
+
+# feature
+dt_baseline_cm_val_feature:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_auc_test_inter.jpeg
+  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_feature.jpeg
+
+dt_cv_cm_val_feature:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_feature.jpeg
+
+dt_cv_cm_test_feature:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_feature.jpeg
+
+## AUC
+# intermediate
+dt_baseline_auc_val_intermediate:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_baseline_auc_val_intermediate.jpeg
+
+dt_cv_auc_val_intermediate:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_cv_auc_val_intermediate.jpeg
+
+dt_cv_auc_test_intermediate:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_auc_test_intermediate.jpeg
+
+# primary
+dt_baseline_auc_val_primary:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_baseline_auc_val_primary.jpeg
+
+dt_cv_auc_val_primary:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_cv_auc_val_primary.jpeg
+
+dt_cv_auc_test_primary:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_auc_test_primary.jpeg
+
+# feature
+dt_baseline_auc_val_feature:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_baseline_auc_val_feature.jpeg
+
+dt_cv_auc_val_feature:
+  type: matplotlib.MatplotlibWriter
+  filepath: ./data/08_reporting/dt_cv_auc_val_feature.jpeg
+
+dt_cv_auc_test_feature:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: ./data/08_reporting/dt_cv_auc_test_feature.jpeg

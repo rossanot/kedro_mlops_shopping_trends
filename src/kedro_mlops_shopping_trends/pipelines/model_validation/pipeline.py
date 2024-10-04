@@ -2,11 +2,56 @@
 This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
+from pathlib import Path
+from kedro.config import OmegaConfigLoader
+from kedro.framework.project import settings
 
 from kedro.pipeline import Pipeline, pipeline, node
 from .nodes import (model_evaluate,
                     conf_matrix,
                     auc_roc)
+
+PATH = './'
+conf_path = str(Path(PATH) / settings.CONF_SOURCE)
+conf_loader = OmegaConfigLoader(conf_source=conf_path)
+stage = conf_loader['parameters']['model_training']['dataset_stage']
+
+
+stage_datasets = {
+    'baseline': {
+        'inputs': {
+            'y_true': 'y_val_' + stage,
+            'y_predicted': 'dt_baseline_val_ypredicted_' + stage
+            },
+        'outputs': {
+            'scores': 'dt_baseline_scores_' + stage,
+            'cm': 'dt_baseline_cm_val_' + stage,
+            'aucroc': 'dt_baseline_auc_val_' + stage
+            }
+        },
+    'cv_validation': {
+        'inputs': {
+            'y_true': 'y_val_' + stage,
+            'y_predicted': 'dt_cv_val_ypredicted_' + stage
+            },
+        'outputs': {
+            'scores': 'dt_cv_val_scores_' + stage,
+            'cm': 'dt_cv_cm_val_' + stage,
+            'aucroc': 'dt_cv_auc_val_' + stage
+            }
+        },
+    'cv_test': {
+        'inputs': {
+            'y_true': 'y_test_' + stage,
+            'y_predicted': 'dt_cv_test_ypredicted_' + stage
+            },
+        'outputs': {
+            'scores': 'dt_cv_test_scores_' + stage,
+            'cm': 'dt_cv_cm_test_' + stage,
+            'aucroc': 'dt_cv_auc_test_' + stage
+            }
+            }
+            }
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -29,41 +74,37 @@ def create_pipeline(**kwargs) -> Pipeline:
             )
             ])
 
-    eval_baseline_inter = pipeline(
+    eval_baseline = pipeline(
         pipe=evaluate,
-        inputs={'y_true': 'y_val_intermediate',
-                'y_predicted': 'dt_baseline_val_ypredicted_inter'},
+        inputs={
+            **stage_datasets['baseline']['inputs']
+            },
         outputs={
-            'scores': 'dt_baseline_scores_inter',
-            'cm': 'dt_baseline_cm_val_inter',
-            'aucroc': 'dt_baseline_auc_val_inter',
+            **stage_datasets['baseline']['outputs']
             },
         namespace='model_validation'
     )
 
-    eval_cv_val_inter = pipeline(
+    eval_cv_val = pipeline(
         pipe=evaluate,
-        inputs={'y_true': 'y_val_intermediate',
-                'y_predicted': 'dt_cv_val_ypredicted_inter'
+        inputs={
+            **stage_datasets['cv_validation']['inputs']
                 },
         outputs={
-            'scores': 'dt_cv_val_scores_inter',
-            'cm': 'dt_cv_cm_val_inter',
-            'aucroc': 'dt_cv_auc_val_inter',
+            **stage_datasets['cv_validation']['outputs']
             },
         namespace='model_validation'
     )
 
-    eval_cv_test_inter = pipeline(
+    eval_cv_test = pipeline(
         pipe=evaluate,
-        inputs={'y_true': 'y_test_intermediate',
-                'y_predicted': 'dt_cv_test_ypredicted_inter'},
+        inputs={
+            **stage_datasets['cv_test']['inputs'],
+        },
         outputs={
-            'scores': 'dt_cv_test_scores_inter',
-            'cm': 'dt_cv_cm_test_inter',
-            'aucroc': 'dt_cv_auc_test_inter',
+            **stage_datasets['cv_test']['outputs'],
             },
         namespace='model_validation'
     )
 
-    return eval_baseline_inter + eval_cv_val_inter + eval_cv_test_inter
+    return eval_baseline + eval_cv_val + eval_cv_test

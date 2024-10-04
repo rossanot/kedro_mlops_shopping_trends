@@ -1,2 +1,6 @@
 server:
   mlflow_tracking_uri: mlflow_runs
+
+# experiment:
+#   name: subscription-status-prediction
+#   create: True

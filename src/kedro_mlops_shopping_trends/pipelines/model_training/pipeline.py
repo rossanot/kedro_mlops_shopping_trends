@@ -2,6 +2,9 @@
 This is a boilerplate pipeline 'model_training'
 generated using Kedro 0.18.14
 """
+from pathlib import Path
+from kedro.config import OmegaConfigLoader
+from kedro.framework.project import settings
 
 from kedro.pipeline import Pipeline, pipeline, node
 from .nodes import (model_train,
@@ -9,6 +12,36 @@ from .nodes import (model_train,
                     top_feats_mutual,
                     get_reduced_x,
                     grid_search)
+
+PATH = './'
+conf_path = str(Path(PATH) / settings.CONF_SOURCE)
+conf_loader = OmegaConfigLoader(conf_source=conf_path)
+stage = conf_loader['parameters']['model_training']['dataset_stage']
+
+
+stage_datasets = {
+    'baseline': {
+        'inputs': {
+            'X_train': 'X_train_' + stage,
+            'X_val': 'X_val_' + stage,
+            'y_train': 'y_train_' + stage
+            },
+        'outputs': {
+            'model_output': 'dt_baseline_' + stage,
+            'y_predicted': 'dt_baseline_val_ypredicted_' + stage
+            },
+            },
+    'cv': {
+        'inputs': {
+            'X_test': 'X_test_' + stage,
+        },
+        'outputs': {
+            'features': 'dt_cv_features_' + stage,
+            'model_output': 'dt_cv_' + stage,
+            'y_val_predicted': 'dt_cv_val_ypredicted_' + stage,
+            'y_test_predicted': 'dt_cv_test_ypredicted_' + stage
+        },
+            }}
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -91,32 +124,24 @@ def create_pipeline(**kwargs) -> Pipeline:
     baseline_inter = pipeline(
         pipe=baseline,
         inputs={
-            'X_train': 'X_train_intermediate',
-            'X_val': 'X_val_intermediate',
-            'y_train': 'y_train_intermediate',
+            **stage_datasets['baseline']['inputs']
             },
         outputs={
-            'model_output': 'dt_baseline_inter',
-            'y_predicted': 'dt_baseline_val_ypredicted_inter'
+            **stage_datasets['baseline']['outputs']
             },
-        namespace='model_intermediate'
+        namespace='model_training'
         )
 
     cv_train_inter = pipeline(
         pipe=cross_validation,
         inputs={
-            'X_train': 'X_train_intermediate',
-            'X_val': 'X_val_intermediate',
-            'X_test': 'X_test_intermediate',
-            'y_train': 'y_train_intermediate'
+            **stage_datasets['baseline']['inputs'],
+            **stage_datasets['cv']['inputs']
             },
         outputs={
-            'features': 'dt_cv_features_inter',
-            'model_output': 'dt_cv_inter',
-            'y_val_predicted': 'dt_cv_val_ypredicted_inter',
-            'y_test_predicted': 'dt_cv_test_ypredicted_inter'
+            **stage_datasets['cv']['outputs']
             },
-        namespace='model_intermediate'
+        namespace='model_training'
         )
 
     return baseline_inter + cv_train_inter

@@ -4,15 +4,16 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
 
-model_intermediate:
+model_training:
   classifier: Decision Tree
+  dataset_stage: primary
   kfold: True
   hyperparams:
     criterion: ['gini', 'entropy', 'log_loss']
     splitter: ['best', 'random']
     max_depth: [2, 4, 8]
 
-# model_intermediate:
+# model_training:
 #   classifier: XGBoost
 #   kfold: False
 #   hyperparams:
@@ -20,7 +21,7 @@ model_intermediate:
 #     n_estimators: [2, 4, 8, 16, 32, 64, 100]
 #     max_depth: [2, 4, 8, 12, 16, 20, 24]
 
-# model_intermediate:
+# model_training:
 #   classifier: Logistic Regression
 #   kfold: True
 #   hyperparams:
