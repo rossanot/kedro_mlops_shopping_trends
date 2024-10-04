@@ -1,6 +1,8 @@
 server:
   mlflow_tracking_uri: mlflow_runs
 
-# experiment:
-#   name: subscription-status-prediction
-#   create: True
+tracking:
+  experiment:
+    name: subscription-status-prediction
+  run:
+    name: ${runtime_params:mlflow_run_name, ${km.random_name:}}
