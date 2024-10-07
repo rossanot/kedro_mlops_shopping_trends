@@ -1,18 +1,25 @@
 # **Prediction of a Customer Subscription Status**
 ## **Business Case**
-The use case of this project is to predict a customer subscription status. Predicting the subscription status of a customer would allow to provide customized offers/products that could eventually lead to the subscription of the customer.
+Herein, an ML is trained to predict a customer subscription status. By predicting the subscription status of a customer, the company would have the chance to promote customized products to the customer, which in turn could eventually lead to them subscribing to a service.
 
-Herein, I explore the use of Kedro, mlflow, and Kaggle in the creation of a streamlined ML framework. The pipeline consumes a Kaggle dataset via the Kaggle API service and serves a classification model. An overview of the Kedro pipeline is provided below.
+In this project, I explore the implementation of Kedro, MLflow, and Kaggle to create a streamlined ML framework. The pipeline consumes a Kaggle dataset via the Kaggle API service. Later, the acquired data is processed and used to train an ML model using Kedro's scheme. Finally, the generated models and model artifacts are tracked and versioned using MLflow. Figure 1 includes a visualization of a subsection fo the whole Kedro pipeline.
 
-![Kedro (intermediate) data layer pipeline](./docs/figures/kedro_intermediate_pipeline_clear_01.png | width=100)
+<figure>
+  <img src="./docs/figures/kedro_intermediate_pipeline_clear_01.png" width="500">
+  <figcaption>Figure 1. Kedro (intermediate) data layer pipeline.</figcaption>
+</figure>
+
 
 ## **Project Highlights**
+### **Description of the problem**
 - **Target**: `Subscription Status`
 - Problem: Bimodal classification
 - Training/Validation/Test dataset size:
     - training: 0.8
     - test: 0.15
     - validation: 0.05
+
+### **Details of the implementation**
 - Implementation of an ML pipeline using Kedro
 - Integration of Kaggle API into a Kedro pipeline
 - The project includes the following pipeline items:
@@ -73,7 +80,12 @@ where `pipeline_item` can be `data_acquisition`, `data_processing`, `eda`, `mode
 streamlit run streamlit-entry.py
 ```
 
-![Subscription Status Distribution](./docs/figures/streamlit_dashboard_01.png)
+<figure>
+  <img src="./docs/figures/streamlit_dashboard_01.png" width="500">
+  <figcaption>Figure 2. Subscription Status Distribution.</figcaption>
+</figure>
+
+
 
 > [!NOTE] 
 > The `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline with the objective of exploring the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
