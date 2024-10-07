@@ -1,10 +1,10 @@
 # **Prediction of a Customer Subscription Status**
 ## **Business Case**
-Use case: Predict a customer subscription status. Predicting the subscription status of a customer would allow to provide customized offers/products that could eventually lead to the subscription of the customer.
+The use case of this project is to predict a customer subscription status. Predicting the subscription status of a customer would allow to provide customized offers/products that could eventually lead to the subscription of the customer.
 
-Herein, I explore the use of Kedro, mlflow, and Kaggle in the creation of a streamlined ML framework. The pipeline consumes a Kaggle dataset via Kaggle's API service and serves a classification model. An overview of the Kedro pipeline is provided below.
+Herein, I explore the use of Kedro, mlflow, and Kaggle in the creation of a streamlined ML framework. The pipeline consumes a Kaggle dataset via the Kaggle API service and serves a classification model. An overview of the Kedro pipeline is provided below.
 
-![Kedro (intermediate) data layer pipeline](./docs/figures/kedro_intermediate_pipeline_clear_01.png)
+![Kedro (intermediate) data layer pipeline](./docs/figures/kedro_intermediate_pipeline_clear_01.png | width=100)
 
 ## **Project Highlights**
 - **Target**: `Subscription Status`
@@ -75,7 +75,8 @@ streamlit run streamlit-entry.py
 
 ![Subscription Status Distribution](./docs/figures/streamlit_dashboard_01.png)
 
-> [!NOTE]: `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline with the objective of exploring the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
+> [!NOTE] 
+> The `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline with the objective of exploring the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
 
 - MLflow for `model tracking`
     ```
