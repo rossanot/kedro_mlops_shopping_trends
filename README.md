@@ -9,17 +9,28 @@ In this project, I explore the implementation of Kedro, MLflow, and Kaggle to cr
   <figcaption>Figure 1. Kedro (intermediate) data layer pipeline.</figcaption>
 </figure>
 
+## **Data Acquisition**
+The dataset used here was obtained from Kaggle and can be found with the following information:
 
-## **Project Highlights**
-### **Description of the problem**
+```
+Dataset name: customer-shopping-trends-dataset
+File name: shopping_trends.csv
+Kaggler user name: iamsouravbanerjee
+```
+
+The data is available as a tabular dataset in the `.csv` format. The last time the dataset was accessed was on September 7th, 2024. More information about how to configure the pipeline to get the data from Kaggle is discussed in the [Kaggle API configuration](#3.4)
+
+## **Data Processing**
+
+## **Model Training**
 - **Target**: `Subscription Status`
-- Problem: Bimodal classification
-- Training/Validation/Test dataset size:
+- **ML Problem**: Bimodal classification
+- **Training/Validation/Test dataset size**:
     - training: 0.8
     - test: 0.15
     - validation: 0.05
-
-### **Details of the implementation**
+  
+## **Model Performance**
 - Implementation of an ML pipeline using Kedro
 - Integration of Kaggle API into a Kedro pipeline
 - The project includes the following pipeline items:
@@ -40,8 +51,8 @@ In this project, I explore the implementation of Kedro, MLflow, and Kaggle to cr
         ```
     - `model_validation`
 
-## **Running and Configuring the Pipeline**
-### **Model Training Configuration**
+## **3. How-To**
+### **3.1 Model Training Configuration**
 ```
 model_training:
   classifier: Decision Tree
@@ -53,7 +64,7 @@ model_training:
     max_depth: [2, 4, 8]
 ```
 
-### **Running the Pipeline**
+### **3.2 Running the Pipeline**
 - The entire pipeline can be run using the following command
 
 ```
@@ -97,7 +108,7 @@ streamlit run streamlit-entry.py
     > [!NOTE]
     > The `./mlflow_runs` directory is created upon `kedro run` execution.
 
-## **Notes about installation**
+## **3.3 Notes about installation**
 Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
 
 ```
@@ -108,7 +119,7 @@ pip install kedro-datasets[matplotlib.MatplotlibWriter]
 > [!IMPORTANT]  
 > Partial migration from Kedro 0.18.14 to 0.19.8 was done, meaning that some capabilities might need further update.
 
-## Kaggle API configuration
+## **3.4 Kaggle API configuration**<a id='3.4'></a>
 Add API Kaggle token to `./conf/local/credentials.yml` as follows:
 ```
 kaggle:
@@ -118,11 +129,9 @@ kaggle:
 
 The `KAGGLE_KEY` refers to your Kaggle token. How to create a Kaggle token is described [here](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication).
 
-## MLflow UI
+## **3.5 MLflow UI**
 ```
 mlflow ui --backend-store-uri ./mlflow_runs
 ```
 > [!NOTE]
 > The `./mlflow_runs` directory is created upon `kedro run` execution.
-
-## 
