@@ -92,7 +92,7 @@ streamlit run streamlit-entry.py
 ```
 
 <figure>
-  <img src="./docs/figures/streamlit_dashboard_01.png" width="500">
+  <img src="./docs/figures/streamlit_dashboard_01.gif" width="500">
   <figcaption>Figure 2. Subscription Status Distribution.</figcaption>
 </figure>
 
