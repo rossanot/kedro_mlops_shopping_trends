@@ -3,13 +3,12 @@ This is a boilerplate pipeline 'model_training'
 generated using Kedro 0.18.14
 """
 from kedro.pipeline import Pipeline, pipeline, node
-from model_training.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import data_layer
 from .nodes import (model_train,
                     model_predict,
                     top_feats_mutual,
                     get_reduced_x,
                     grid_search)
-
 
 layer = data_layer()
 
