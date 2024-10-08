@@ -5,8 +5,8 @@ Herein, an ML is trained to predict a customer subscription status. By predictin
 In this project, I explore the implementation of Kedro, MLflow, and Kaggle to create a streamlined ML framework. The pipeline consumes a Kaggle dataset via the Kaggle API service. Later, the acquired data is processed and used to train an ML model using Kedro's scheme. Finally, the generated models and model artifacts are tracked and versioned using MLflow. Figure 1 includes a visualization of a subsection fo the whole Kedro pipeline.
 
 <figure>
-  <img src="./docs/figures/kedro_intermediate_pipeline_clear_01.png" width="500">
-  <figcaption>Figure 1. Kedro (intermediate) data layer pipeline.</figcaption>
+  <img src="./docs/figures/kedro_feature_pipeline_no_background_01.png" width="500">
+  <figcaption>Figure 1. Kedro feature data layer pipeline.</figcaption>
 </figure>
 
 ## **Data Acquisition**
