@@ -3,7 +3,10 @@ import pandas as pd
 
 import plotly.express as px
 
-from dashboard.utils import (read_datafile, get_filepath, get_features)
+from dashboard.utils import (
+    read_datafile, get_filepath, get_features_dynamically,
+    get_features_from_catalog
+    )
 
 st.title('Shopping Patterns USA Dataset')
 
@@ -36,22 +39,28 @@ selected_df = st.sidebar.selectbox(
     placeholder='Select a dataset to visualize'
 )
 
+# display subheader
+st.subheader(selected_df)
+
 # Load df
 df = read_datafile(get_filepath(dfs[selected_df][0]))
 
 # Load  parameters
-params = get_features(dfs[selected_df][1])
-categ_params = params['categorical']
-numeric_params = params['numerical']
-label = params['target'][0]
+features_catalog = get_features_from_catalog(dfs[selected_df][1])
+features_dynam = get_features_dynamically(df)
+categ_params = features_dynam[0]  # categorical
+numeric_params = features_dynam[1]  # numerical
+label = features_catalog['target'][0]
 
-# Print df info
+# Print dataset info
 df_rows, df_columns = df.shape
-st.write('Total Number of Examples: {}, Total Number of Features: {}'.format(
-    df_rows, df_columns)
-    )
+st.write('Total Number of Examples: {}\n'.format(df_rows))
+st.write('Total Number of Features: {}\n'.format(df_columns))
 
-st.write(df.head(2))
+# Display DataFrame
+st.dataframe(
+    df, use_container_width=True, height=300
+    )
 
 with st.sidebar:
     bar_feature1 = st.selectbox(
@@ -61,13 +70,13 @@ with st.sidebar:
     )
 
     bar_feature2 = st.selectbox(
-        'Box Plot Feature 1',
+        'Box Plot Feature 1 (x-axis)',
         categ_params + [label],
         placeholder='Select a feature to plot'
     )
 
     bar_feature3 = st.selectbox(
-        'Box Plot Feature 2',
+        'Box Plot Feature 2 (y-axis)',
         numeric_params,
         placeholder='Select a feature to plot'
     )
@@ -80,9 +89,13 @@ with data_container1:
         corr_title = 'Feature Correlation'
         corr_matrix = df[numeric_params].corr()
         corr_fig = px.imshow(corr_matrix, title=corr_title)
-        corr_fig.update_coloraxes(colorbar_orientation='h')
-        corr_fig.update_layout(coloraxis_colorbar_y=0.8)
+        corr_fig.update_coloraxes(
+            colorbar_orientation='h', colorbar_x=0.5
+            )
+        corr_fig.update_layout(coloraxis_colorbar_y=0.9)
+        corr_fig.update_xaxes(tickangle=45)
         st.plotly_chart(corr_fig, use_container_width=True)
+    
     with plot2:
         pie_title = '{} Distribtuion'.format(label)
         pie_fig = px.pie(df, names=label, title=pie_title)
