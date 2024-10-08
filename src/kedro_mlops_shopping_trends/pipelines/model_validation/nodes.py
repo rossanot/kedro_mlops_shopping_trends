@@ -4,7 +4,7 @@ generated using Kedro 0.18.14
 """
 from typing import Dict
 import pandas as pd
-from model_training.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import data_layer
 from sklearn.metrics import (f1_score,
                              accuracy_score,
                              recall_score

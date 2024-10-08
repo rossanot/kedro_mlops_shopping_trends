@@ -3,11 +3,10 @@ This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
 from kedro.pipeline import Pipeline, pipeline, node
-from model_training.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import data_layer
 from .nodes import (model_evaluate,
                     conf_matrix,
                     auc_roc)
-
 
 layer = data_layer()
 
