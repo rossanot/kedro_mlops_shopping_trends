@@ -21,7 +21,7 @@ Kaggler user name: iamsouravbanerjee
 The data is available as a tabular dataset in the `.csv` format. The last time the dataset was accessed was on September 7th, 2024. More information about how to configure the pipeline to get the data using the Kaggle API app is discussed in the [Kaggle API configuration](#6.4) section
 
 ## **3. Data Processing**
-The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is the  `intermediate`, `primary`, and `feature` were The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance. 
+The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is the  `intermediate`, `primary`, and `feature` were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance. 
 
 
 ```mermaid
@@ -39,7 +39,7 @@ flowchart LR;
 
 |Step| Transformations|
 |:---:|:---:|
-|`1`| Fix redundant purchase frequency, encode target|
+|`1`| Fix redundant `purchase frequency`, encode target `subscription status`|
 |`2`| `1`, encode `review rating` into ranges, `location` (states) into regions, `color`s into general hues, `item purchased` into categories|
 |`3`| `1`, `2`, encode `age`, `purchase amount`, and `previous purchase` into groups|
 
