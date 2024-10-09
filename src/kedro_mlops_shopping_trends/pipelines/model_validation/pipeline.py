@@ -3,45 +3,45 @@ This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
 from kedro.pipeline import Pipeline, pipeline, node
-from kedro_mlops_shopping_trends.pipelines.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import get_params
 from .nodes import (model_evaluate,
                     conf_matrix,
                     auc_roc)
 
-layer = data_layer()
+layer = get_params('model_validation', 'data_layer')
 
 layer_datasets = {
     'baseline': {
         'inputs': {
             'y_true': 'y_val_' + layer,
-            'y_predicted': 'dt_baseline_val_ypredicted_' + layer
+            'y_predicted': 'baseline_val_ypredicted_' + layer
             },
         'outputs': {
-            'scores': 'dt_baseline_scores_' + layer,
-            'cm': 'dt_baseline_cm_val_' + layer,
-            'aucroc': 'dt_baseline_auc_val_' + layer
+            'scores': 'baseline_scores_' + layer,
+            'cm': 'baseline_cm_val_' + layer,
+            'aucroc': 'baseline_auc_val_' + layer
             }
         },
-    'cv_validation': {
+    'grid_search_validation': {
         'inputs': {
             'y_true': 'y_val_' + layer,
-            'y_predicted': 'dt_cv_val_ypredicted_' + layer
+            'y_predicted': 'grid_search_val_ypredicted_' + layer,
             },
         'outputs': {
-            'scores': 'dt_cv_val_scores_' + layer,
-            'cm': 'dt_cv_cm_val_' + layer,
-            'aucroc': 'dt_cv_auc_val_' + layer
+            'scores': 'grid_search_val_scores_' + layer,
+            'cm': 'grid_search_cm_val_' + layer,
+            'aucroc': 'grid_search_auc_val_' + layer
             }
         },
-    'cv_test': {
+    'grid_search_test': {
         'inputs': {
             'y_true': 'y_test_' + layer,
-            'y_predicted': 'dt_cv_test_ypredicted_' + layer
+            'y_predicted': 'grid_search_test_ypredicted_' + layer,
             },
         'outputs': {
-            'scores': 'dt_cv_test_scores_' + layer,
-            'cm': 'dt_cv_cm_test_' + layer,
-            'aucroc': 'dt_cv_auc_test_' + layer
+            'scores': 'grid_search_test_scores_' + layer,
+            'cm': 'grid_search_cm_test_' + layer,
+            'aucroc': 'grid_search_auc_test_' + layer
             }
             }
             }
@@ -78,26 +78,26 @@ def create_pipeline(**kwargs) -> Pipeline:
         namespace='model_validation'
     )
 
-    eval_cv_val = pipeline(
+    eval_grid_search_val = pipeline(
         pipe=evaluate,
         inputs={
-            **layer_datasets['cv_validation']['inputs']
+            **layer_datasets['grid_search_validation']['inputs']
                 },
         outputs={
-            **layer_datasets['cv_validation']['outputs']
+            **layer_datasets['grid_search_validation']['outputs']
             },
         namespace='model_validation'
     )
 
-    eval_cv_test = pipeline(
+    eval_grid_search_test = pipeline(
         pipe=evaluate,
         inputs={
-            **layer_datasets['cv_test']['inputs'],
+            **layer_datasets['grid_search_test']['inputs'],
         },
         outputs={
-            **layer_datasets['cv_test']['outputs'],
+            **layer_datasets['grid_search_test']['outputs'],
             },
         namespace='model_validation'
     )
 
-    return eval_baseline + eval_cv_val + eval_cv_test
+    return eval_baseline + eval_grid_search_val + eval_grid_search_test

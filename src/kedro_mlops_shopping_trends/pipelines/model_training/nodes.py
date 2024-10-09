@@ -4,7 +4,7 @@ generated using Kedro 0.18.14
 """
 import logging
 
-from typing import Dict, Tuple, List
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -84,6 +84,12 @@ def top_feats_mutual(
 
     columns_all = X_train.columns.to_numpy()
 
+    importance_df = pd.DataFrame(
+        {'Feature': columns_all, 'Importance': feature_imp}
+        ).sort_values(by='Importance', ascending=False)
+
+    logger.info('Feature importance: {}'.format(importance_df))
+
     columns_red = columns_all[np.argsort(feature_imp)[-max_number:]]
     return {'features': columns_red.tolist()}
 
@@ -145,5 +151,11 @@ def grid_search(
 
     else:
         y_train = y_train.to_numpy().reshape(-1)
-   
-    return best_classifier.fit(X_train, y_train)
+
+    estimator = best_classifier.fit(X_train, y_train)
+    estimator_params = estimator.best_params_
+    logger.info('Best parameters: {}'.format(estimator_params))
+
+    logger.info('Model training features{}'.format(X_train.columns.to_list()))
+
+    return model(**estimator_params).fit(X_train, y_train)

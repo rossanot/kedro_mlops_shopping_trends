@@ -3,14 +3,14 @@ This is a boilerplate pipeline 'model_training'
 generated using Kedro 0.18.14
 """
 from kedro.pipeline import Pipeline, pipeline, node
-from kedro_mlops_shopping_trends.pipelines.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import get_params
 from .nodes import (model_train,
                     model_predict,
                     top_feats_mutual,
                     get_reduced_x,
                     grid_search)
 
-layer = data_layer()
+layer = get_params('model_training', 'data_layer')
 
 layer_datasets = {
     'baseline': {
@@ -20,19 +20,19 @@ layer_datasets = {
             'y_train': 'y_train_' + layer
             },
         'outputs': {
-            'model_output': 'dt_baseline_' + layer,
-            'y_predicted': 'dt_baseline_val_ypredicted_' + layer
+            'model_output': 'baseline_' + layer,
+            'y_predicted': 'baseline_val_ypredicted_' + layer
             },
             },
-    'cv': {
+    'grid_search': {
         'inputs': {
             'X_test': 'X_test_' + layer,
         },
         'outputs': {
-            'features': 'dt_cv_features_' + layer,
-            'model_output': 'dt_cv_' + layer,
-            'y_val_predicted': 'dt_cv_val_ypredicted_' + layer,
-            'y_test_predicted': 'dt_cv_test_ypredicted_' + layer
+            'features': 'grid_search_features_' + layer,
+            'model_output': 'grid_search_' + layer,
+            'y_val_predicted': 'grid_search_val_ypredicted_' + layer,
+            'y_test_predicted': 'grid_search_test_ypredicted_' + layer
         },
             }}
 
@@ -66,7 +66,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=top_feats_mutual,
                 inputs=[
                     'X_train',
-                    'y_train'
+                    'y_train',
+                    'params:top_n_features'
                     ],
                 outputs='features',
                 name='feature_selection'
@@ -125,16 +126,16 @@ def create_pipeline(**kwargs) -> Pipeline:
         namespace='model_training'
         )
 
-    cv_train_inter = pipeline(
+    grid_search_train_inter = pipeline(
         pipe=cross_validation,
         inputs={
             **layer_datasets['baseline']['inputs'],
-            **layer_datasets['cv']['inputs']
+            **layer_datasets['grid_search']['inputs']
             },
         outputs={
-            **layer_datasets['cv']['outputs']
+            **layer_datasets['grid_search']['outputs']
             },
         namespace='model_training'
         )
 
-    return baseline_inter + cv_train_inter
+    return baseline_inter + grid_search_train_inter
