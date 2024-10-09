@@ -66,7 +66,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=top_feats_mutual,
                 inputs=[
                     'X_train',
-                    'y_train'
+                    'y_train',
+                    'params:top_n_features'
                     ],
                 outputs='features',
                 name='feature_selection'

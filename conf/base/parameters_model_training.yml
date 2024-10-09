@@ -8,10 +8,11 @@ model_training:
   classifier: Decision Tree
   data_layer: primary # intermediate, primary, or feature
   kfold: True
+  top_n_features: 3
   hyperparams:
     criterion: ['gini', 'entropy', 'log_loss']
     splitter: ['best', 'random']
-    max_depth: [2, 4, 8]
+    max_depth: [2, 4, 8, 16]
 
 # model_training:
 #   classifier: XGBoost
