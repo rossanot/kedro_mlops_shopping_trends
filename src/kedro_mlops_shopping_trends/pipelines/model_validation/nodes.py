@@ -4,22 +4,22 @@ generated using Kedro 0.18.14
 """
 from typing import Dict
 import pandas as pd
-from kedro_mlops_shopping_trends.pipelines.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import get_params
+import matplotlib.pyplot as plt
 from sklearn.metrics import (f1_score,
                              accuracy_score,
                              recall_score
                              )
-from sklearn.metrics import (confusion_matrix,
-                             ConfusionMatrixDisplay,
-                             roc_curve,
-                             auc,
-                             RocCurveDisplay)
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    RocCurveDisplay)
 
 import logging
 logger = logging.getLogger(__name__)
 
-stage = data_layer()
 steps = {'intermediate': 0, 'primary': 1, 'feature': 2}
+layer = get_params('model_validation', 'data_layer')
+classifier = get_params('model_validation', 'classifier')
 
 
 def model_evaluate(
@@ -32,7 +32,7 @@ def model_evaluate(
     :param y_true: true labels pd.DataFrame
     :return: scores Dict
     """
-    stage = data_layer()
+    stage = get_params('model_validation', 'data_layer')
 
     fscore = f1_score(y_true.to_numpy(), y_predicted)
     acc = accuracy_score(y_true.to_numpy(), y_predicted)
@@ -55,29 +55,31 @@ def model_evaluate(
 def conf_matrix(
         y_true: pd.DataFrame,
         y_predicted: pd.DataFrame
-        ):
-    
-    cm = confusion_matrix(y_true,
-                          y_predicted
-                          )
-    
-    disp = ConfusionMatrixDisplay(cm)
-    return disp.plot().figure_
-    
+        ) -> plt.Figure:
+    """Plot confusion matrix
+    """
+    title = classifier + ' ' + layer + ' ' + 'Confusion Matrix'
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ConfusionMatrixDisplay.from_predictions(y_true, y_predicted, ax=ax)
+    ax.set_title(title)
+    return fig
+
 
 def auc_roc(
         y_true: pd.DataFrame,
-        y_predicted: pd.DataFrame
-        ):
+        y_predicted: pd.DataFrame,
+        title: str = 'AUC-ROC Curve'
+        ) -> plt.Figure:
+    """Plot AUC-ROC curve
+    """
+    title = classifier + ' ' + layer + ' ' + 'AUC-ROC Curve'
 
-    fpr, tpr, _ = roc_curve(
+    fig, ax = plt.subplots(figsize=(10, 5))
+    RocCurveDisplay.from_predictions(
         y_true,
-        y_predicted)
+        y_predicted,
+        ax=ax)
+    ax.set_title(title)
 
-    roc_auc = auc(fpr, tpr)
-    disp = RocCurveDisplay(
-        fpr=fpr,
-        tpr=tpr,
-        roc_auc=roc_auc)
-
-    return disp.plot().figure_
+    return fig

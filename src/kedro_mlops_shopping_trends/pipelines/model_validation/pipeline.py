@@ -3,12 +3,12 @@ This is a boilerplate pipeline 'model_validation'
 generated using Kedro 0.18.14
 """
 from kedro.pipeline import Pipeline, pipeline, node
-from kedro_mlops_shopping_trends.pipelines.utils import data_layer
+from kedro_mlops_shopping_trends.pipelines.utils import get_params
 from .nodes import (model_evaluate,
                     conf_matrix,
                     auc_roc)
 
-layer = data_layer()
+layer = get_params('model_validation', 'data_layer')
 
 layer_datasets = {
     'baseline': {
@@ -25,7 +25,7 @@ layer_datasets = {
     'grid_search_validation': {
         'inputs': {
             'y_true': 'y_val_' + layer,
-            'y_predicted': 'grid_search_val_ypredicted_' + layer
+            'y_predicted': 'grid_search_val_ypredicted_' + layer,
             },
         'outputs': {
             'scores': 'grid_search_val_scores_' + layer,
@@ -36,7 +36,7 @@ layer_datasets = {
     'grid_search_test': {
         'inputs': {
             'y_true': 'y_test_' + layer,
-            'y_predicted': 'grid_search_test_ypredicted_' + layer
+            'y_predicted': 'grid_search_test_ypredicted_' + layer,
             },
         'outputs': {
             'scores': 'grid_search_test_scores_' + layer,

@@ -4,7 +4,7 @@ generated using Kedro 0.18.14
 """
 import logging
 
-from typing import Dict, Tuple, List
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -89,7 +89,7 @@ def top_feats_mutual(
         ).sort_values(by='Importance', ascending=False)
 
     logger.info('Feature importance: {}'.format(importance_df))
-    
+
     columns_red = columns_all[np.argsort(feature_imp)[-max_number:]]
     return {'features': columns_red.tolist()}
 
