@@ -6,7 +6,7 @@
 
 model_training:
   classifier: Decision Tree
-  data_layer: primary # intermediate, primary, or feature
+  data_layer: intermediate # intermediate, primary, or feature
   kfold: True
   top_n_features: 3
   hyperparams:

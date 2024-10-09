@@ -20,19 +20,19 @@ layer_datasets = {
             'y_train': 'y_train_' + layer
             },
         'outputs': {
-            'model_output': 'dt_baseline_' + layer,
-            'y_predicted': 'dt_baseline_val_ypredicted_' + layer
+            'model_output': 'baseline_' + layer,
+            'y_predicted': 'baseline_val_ypredicted_' + layer
             },
             },
-    'cv': {
+    'grid_search': {
         'inputs': {
             'X_test': 'X_test_' + layer,
         },
         'outputs': {
-            'features': 'dt_cv_features_' + layer,
-            'model_output': 'dt_cv_' + layer,
-            'y_val_predicted': 'dt_cv_val_ypredicted_' + layer,
-            'y_test_predicted': 'dt_cv_test_ypredicted_' + layer
+            'features': 'grid_search_features_' + layer,
+            'model_output': 'grid_search_' + layer,
+            'y_val_predicted': 'grid_search_val_ypredicted_' + layer,
+            'y_test_predicted': 'grid_search_test_ypredicted_' + layer
         },
             }}
 
@@ -126,16 +126,16 @@ def create_pipeline(**kwargs) -> Pipeline:
         namespace='model_training'
         )
 
-    cv_train_inter = pipeline(
+    grid_search_train_inter = pipeline(
         pipe=cross_validation,
         inputs={
             **layer_datasets['baseline']['inputs'],
-            **layer_datasets['cv']['inputs']
+            **layer_datasets['grid_search']['inputs']
             },
         outputs={
-            **layer_datasets['cv']['outputs']
+            **layer_datasets['grid_search']['outputs']
             },
         namespace='model_training'
         )
 
-    return baseline_inter + cv_train_inter
+    return baseline_inter + grid_search_train_inter

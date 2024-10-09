@@ -105,284 +105,327 @@ y_test_feature:
 shopping_raw_stats:
   type: text.TextDataset
   filepath: ./data/08_reporting/eda_raw_stats.txt
+  versioned: true
 
 shopping_raw_hbar:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_hbar.jpeg
+  versioned: true
 
 # Box plot
 shopping_raw_box_gender:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_box_gender.jpeg
+  versioned: true
 
 shopping_raw_box_category:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_box_category.jpeg
+  versioned: true
 
 shopping_raw_box_season:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_box_season.jpeg
+  versioned: true
 
 # Bar plot
 shopping_raw_bar_gender:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_bar_gender.jpeg
+  versioned: true
 
 shopping_raw_bar_category:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_bar_category.jpeg
+  versioned: true
 
 shopping_raw_bar_season:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_bar_season.jpeg
+  versioned: true
 
 # Hist plot
 shopping_raw_hist_age:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_hist_age.jpeg
+  versioned: true
 
 shopping_raw_hist_purchase_amount:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_hist_purchase_amount.jpeg
+  versioned: true
 
 shopping_raw_hist_prev_purchase:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_hist_prev_purchase.jpeg
+  versioned: true
 
 shopping_raw_hist_rating:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_hist_rating.jpeg
+  versioned: true
 
 # Correlation plot
 shopping_raw_correlation:
   type: matplotlib.MatplotlibWriter
   filepath: ./data/08_reporting/eda_raw_correlation.jpeg
+  versioned: true
 
 # Trained models
 # Baseline
-dt_baseline_intermediate:
+baseline_intermediate:
   type: pickle.PickleDataset
-  filepath: data/06_models/dt_baseline_intermediate.pickle
+  filepath: data/06_models/baseline_intermediate.pickle
   versioned: true
 
-dt_baseline_primary:
+baseline_primary:
   type: pickle.PickleDataset
-  filepath: data/06_models/dt_baseline_primary.pickle
+  filepath: data/06_models/baseline_primary.pickle
   versioned: true
 
-dt_baseline_feature:
+baseline_feature:
   type: pickle.PickleDataset
-  filepath: data/06_models/dt_baseline_feat.pickle
+  filepath: data/06_models/baseline_feature.pickle
   versioned: true
 
 # cross-validation with feature selection
-dt_cv_intermediate:
+grid_search_intermediate:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
   run_id: ${runtime_params:mlflow_run_id,null}
   save_args:
-    registered_model_name: dt_cv_intermediate
+    registered_model_name: grid_search_intermediate
 
-dt_cv_primary:
+grid_search_primary:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
   run_id: ${runtime_params:mlflow_run_id,null}
   save_args:
-    registered_model_name: dt_cv_primary
+    registered_model_name: grid_search_primary
 
-dt_cv_feature:
+grid_search_feature:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
   run_id: ${runtime_params:mlflow_run_id,null}
   save_args:
-    registered_model_name: dt_cv_feature
+    registered_model_name: grid_search_feature
 
 ## Feature selection
 # intermediate
-dt_cv_features_intermediate:
+grid_search_features_intermediate:
   type: yaml.YAMLDataset
-  filepath: data/07_model_output/dt_cv_features_intermediate.yaml
+  filepath: data/07_model_output/grid_search_features_intermediate.yaml
+  versioned: true
 
 # primary
-dt_cv_features_primary:
+grid_search_features_primary:
   type: yaml.YAMLDataset
-  filepath: data/07_model_output/dt_cv_features_primary.yaml
+  filepath: data/07_model_output/grid_search_features_primary.yaml
+  versioned: true
 
 # feature
-dt_cv_features_feature:
+grid_search_features_feature:
   type: yaml.YAMLDataset
-  filepath: data/07_model_output/dt_cv_features_feature.yaml
+  filepath: data/07_model_output/grid_search_features_feature.yaml
+  versioned: true
 
 ## Predictions
 # intermediate
-dt_baseline_val_ypredicted_intermediate:
+baseline_val_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_baseline_ypred_intermediate.pickle
+  filepath: ./data/07_model_output/baseline_ypred_intermediate.pickle
+  versioned: true
 
-dt_cv_val_ypredicted_intermediate:
+grid_search_val_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_val_ypred_intermediate.pickle
+  filepath: ./data/07_model_output/grid_search_val_ypred_intermediate.pickle
+  versioned: true
 
-dt_cv_test_ypredicted_intermediate:
+grid_search_test_ypredicted_intermediate:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_test_ypred_intermediate.pickle
+  filepath: ./data/07_model_output/grid_search_test_ypred_intermediate.pickle
+  versioned: true
 
 # primary
-dt_baseline_val_ypredicted_primary:
+baseline_val_ypredicted_primary:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_baseline_ypred_primary.pickle
+  filepath: ./data/07_model_output/baseline_ypred_primary.pickle
+  versioned: true
 
-dt_cv_val_ypredicted_primary:
+grid_search_val_ypredicted_primary:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_val_ypred_primary.pickle
+  filepath: ./data/07_model_output/grid_search_val_ypred_primary.pickle
+  versioned: true
 
-dt_cv_test_ypredicted_primary:
+grid_search_test_ypredicted_primary:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_test_ypred_primary.pickle
+  filepath: ./data/07_model_output/grid_search_test_ypred_primary.pickle
+  versioned: true
 
 # feature
-dt_baseline_val_ypredicted_feature:
+baseline_val_ypredicted_feature:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_baseline_ypred_feature.pickle
+  filepath: ./data/07_model_output/baseline_ypred_feature.pickle
+  versioned: true
 
-dt_cv_val_ypredicted_feature:
+grid_search_val_ypredicted_feature:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_val_ypred_feature.pickle
+  filepath: ./data/07_model_output/grid_search_val_ypred_feature.pickle
+  versioned: true
 
-dt_cv_test_ypredicted_feature:
+grid_search_test_ypredicted_feature:
   type: pandas.ParquetDataset
-  filepath: ./data/07_model_output/dt_cv_test_ypred_feature.pickle 
+  filepath: ./data/07_model_output/grid_search_test_ypred_feature.pickle
+  versioned: true
 
 ## Model scores
 # intermediate
-dt_baseline_scores_intermediate:
+baseline_scores_intermediate:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 # Uncomment to save locally instead
   #   type: pandas.JSONDataSet
-  #   filepath: ./data/07_model_output/dt_baseline_val_scores_intermediate.json
+  #   filepath: ./data/07_model_output/baseline_val_scores_intermediate.json
 
-dt_cv_val_scores_intermediate:
+grid_search_val_scores_intermediate:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 # Uncomment to save locally instead
 #   type: pandas.JSONDataset
-#   filepath: ./data/07_model_output/dt_cv_val_scores_intermediate.json
+#   filepath: ./data/07_model_output/grid_search_val_scores_intermediate.json
 
-dt_cv_test_scores_intermediate:
+grid_search_test_scores_intermediate:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 # Uncomment to save locally instead
 # and return pd.DataFrame from the corresponding node
 #   type: pandas.JSONDataset
-#   filepath: ./data/07_model_output/dt_cv_test_scores_intermediate.json
+#   filepath: ./data/07_model_output/grid_search_test_scores_intermediate.json
 
 # primary
-dt_baseline_scores_primary:
+baseline_scores_primary:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
-dt_cv_val_scores_primary:
+grid_search_val_scores_primary:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
-dt_cv_test_scores_primary:
+grid_search_test_scores_primary:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
 # feature
-dt_baseline_scores_feature:
+baseline_scores_feature:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
-dt_cv_val_scores_feature:
+grid_search_val_scores_feature:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
-dt_cv_test_scores_feature:
+grid_search_test_scores_feature:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
 
 
 ## Confusion Matrix
 # intermediate
-dt_baseline_cm_val_intermediate:
+baseline_cm_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_intermediate.jpeg
+  filepath: ./data/08_reporting/baseline_conf_matrix_val_intermediate.jpeg
+  versioned: true
 
-dt_cv_cm_val_intermediate:
+grid_search_cm_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_intermediate.jpeg
+  filepath: ./data/08_reporting/grid_search_conf_matrix_val_intermediate.jpeg
+  versioned: true
 
-dt_cv_cm_test_intermediate:
+grid_search_cm_test_intermediate:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_intermediate.jpeg
+    filepath: ./data/08_reporting/grid_search_conf_matrix_test_intermediate.jpeg
+    versioned: true
 
 # primary
-dt_baseline_cm_val_primary:
+baseline_cm_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_primary.jpeg
+  filepath: ./data/08_reporting/baseline_conf_matrix_val_primary.jpeg
+  versioned: true
 
-dt_cv_cm_val_primary:
+grid_search_cm_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_primary.jpeg
+  filepath: ./data/08_reporting/grid_search_conf_matrix_val_primary.jpeg
+  versioned: true
 
-dt_cv_cm_test_primary:
+grid_search_cm_test_primary:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_primary.jpeg
+    filepath: ./data/08_reporting/grid_search_conf_matrix_test_primary.jpeg
+    versioned: true
 
 # feature
-dt_baseline_cm_val_feature:
+baseline_cm_val_feature:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_conf_matrix_val_feature.jpeg
+  filepath: ./data/08_reporting/baseline_conf_matrix_val_feature.jpeg
+  versioned: true
 
-dt_cv_cm_val_feature:
+grid_search_cm_val_feature:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_conf_matrix_val_feature.jpeg
+  filepath: ./data/08_reporting/grid_search_conf_matrix_val_feature.jpeg
+  versioned: true
 
-dt_cv_cm_test_feature:
+grid_search_cm_test_feature:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_conf_matrix_test_feature.jpeg
+    filepath: ./data/08_reporting/grid_search_conf_matrix_test_feature.jpeg
+    versioned: true
 
 ## AUC
 # intermediate
-dt_baseline_auc_val_intermediate:
+baseline_auc_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_auc_val_intermediate.jpeg
+  filepath: ./data/08_reporting/baseline_auc_val_intermediate.jpeg
+  versioned: true
 
-dt_cv_auc_val_intermediate:
+grid_search_auc_val_intermediate:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_auc_val_intermediate.jpeg
+  filepath: ./data/08_reporting/grid_search_auc_val_intermediate.jpeg
+  versioned: true
 
-dt_cv_auc_test_intermediate:
+grid_search_auc_test_intermediate:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_auc_test_intermediate.jpeg
+    filepath: ./data/08_reporting/grid_search_auc_test_intermediate.jpeg
+    versioned: true
 
 # primary
-dt_baseline_auc_val_primary:
+baseline_auc_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_auc_val_primary.jpeg
+  filepath: ./data/08_reporting/baseline_auc_val_primary.jpeg
+  versioned: true
 
-dt_cv_auc_val_primary:
+grid_search_auc_val_primary:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_auc_val_primary.jpeg
+  filepath: ./data/08_reporting/grid_search_auc_val_primary.jpeg
+  versioned: true
 
-dt_cv_auc_test_primary:
+grid_search_auc_test_primary:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_auc_test_primary.jpeg
+    filepath: ./data/08_reporting/grid_search_auc_test_primary.jpeg
+    versioned: true
 
 # feature
-dt_baseline_auc_val_feature:
+baseline_auc_val_feature:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_baseline_auc_val_feature.jpeg
+  filepath: ./data/08_reporting/baseline_auc_val_feature.jpeg
+  versioned: true
 
-dt_cv_auc_val_feature:
+grid_search_auc_val_feature:
   type: matplotlib.MatplotlibWriter
-  filepath: ./data/08_reporting/dt_cv_auc_val_feature.jpeg
+  filepath: ./data/08_reporting/grid_search_auc_val_feature.jpeg
+  versioned: true
 
-dt_cv_auc_test_feature:
+grid_search_auc_test_feature:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: matplotlib.MatplotlibWriter
-    filepath: ./data/08_reporting/dt_cv_auc_test_feature.jpeg
+    filepath: ./data/08_reporting/grid_search_auc_test_feature.jpeg
+    versioned: true
