@@ -21,8 +21,7 @@ Kaggler user name: iamsouravbanerjee
 The data is available as a tabular dataset in the `.csv` format. The last time the dataset was accessed was on September 7th, 2024. More information about how to configure the pipeline to get the data using the Kaggle API app is discussed in the [Kaggle API configuration](#6.4) section
 
 ## **3. Data Processing**
-The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is the  `intermediate`, `primary`, and `feature` were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance. 
-
+The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is an intact copy of the Kaggle dataset. While the `intermediate`, `primary`, and `feature` are transformed versions of the `raw` dataset and were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance.
 
 ```mermaid
 flowchart LR;
@@ -45,13 +44,44 @@ flowchart LR;
 
 
 ## **4. Model Training**
+The model training step was carried out by assuming the following configuration presets:
 - **Target**: `Subscription Status`
 - **ML Problem**: Bimodal classification
 - **Training/Validation/Test dataset size**:
     - training: 0.8
     - test: 0.15
     - validation: 0.05
-  
+
+The pipeline supports different `sklearn` methods. The name code to access each method is given below in the format `'name code': method`.
+
+```
+'XGBoost': XGBClassifier
+'Logistic Regression': LogisticRegression
+'KNN': KNeighborsClassifier
+'Naive Bayes': GaussianNB
+'SVM': svm
+```
+
+The model_training pipeline is configured to execute a baseline run and a parameter grid search on top of a feature selection using the `mutual_info_classif` sklearn module. The parameters to be explored in the grid search should be provided in the corresponding parameters file, i.e., [parameters_model_training](conf/base/parameters_model_training.yml) as follows:
+
+```
+model_training:
+  classifier: Decision Tree
+  data_layer: intermediate # intermediate, primary, or feature
+  kfold: True
+  top_n_features: 10
+  hyperparams:
+    criterion: ['gini', 'entropy', 'log_loss']
+    splitter: ['best', 'random']
+    max_depth: [2, 4, 8, 16]
+```
+
+The `classifier` (or method) can be any of the methods supported by the pipeline mentioned before. The `data_layer`
+
+> [!WARNING]
+> Make sure that the method (alias classifier) in the `model_training` pipeline parameters file matches that in the `model_validation` one.
+> Otherwise, the training and validation will be done on different methods.
+
 ## **5. Model Performance**
 - Implementation of an ML pipeline using Kedro
 - Integration of Kaggle API into a Kedro pipeline
