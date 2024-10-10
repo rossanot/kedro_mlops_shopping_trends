@@ -121,7 +121,7 @@ The datasets and model artifacts including the trained model(s) and their corres
 
 <figure id="figure3">
   <p align="center">
-  <img src="./docs/figures/mlflow_dashboard_01.gif" width="500">
+  <img src="./docs/figures/mlflow_dashboard_01.png" width="500">
   <figcaption>Figure 3. MLflow dashboard.</figcaption>
   </p> 
 </figure>
