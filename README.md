@@ -15,7 +15,7 @@ In this project, I explore the implementation of Kedro, MLflow, and Kaggle to cr
 To run the pipeline use the following command
 
 ```bash
-kedro run ---pipeline pipeline_item -params mlflow_run_name="my-run-name" --pipeline "pipeline_item"
+kedro run --params mlflow_run_name="my-run-name" --pipeline "pipeline_item"
 ```
 
 where `pipeline_item` can be `data_acquisition`, `data_processing`, `eda`, `model_training`, `model_validation`
@@ -45,7 +45,7 @@ Where the `KAGGLE_KEY` refers to your Kaggle token. Information on how to create
 > The source data is a synthetic dataset that might not possess the statistical nature of a real scenario. This is important to consider when analyzing the model performance.
 
 ## **4. Data Processing**<a id='4'></a>
-The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is an intact copy of the Kaggle dataset. While the `intermediate`, `primary`, and `feature` are transformed versions of the `raw` dataset and were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance.
+The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is an intact copy of the Kaggle dataset. While the `intermediate`, `primary`, and `feature` are transformed versions of the `raw` dataset and were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance. In addition, different data layers were created to test the use of the Kedro data layers infrastructure.
 
 ```mermaid
 flowchart LR;
@@ -71,7 +71,7 @@ A Streamlit dashboard, [Figure 2](#figure2), is implemented to explore each data
 <figure id="figure2">
   <p align="center">
   <img src="./docs/figures/streamlit_dashboard_01.gif" width="500">
-  <figcaption>Figure 2. Subscription Status Distribution.</figcaption>
+  <figcaption>Figure 2. Streamlit dashboard overview.</figcaption>
   </p> 
 </figure>
 
@@ -117,35 +117,36 @@ Here, the `classifier` (or method) can be any of the methods supported by the pi
 
 All the datasets from the three different layers are split into a training, validation, and test dataset. The validation test is used to compare the models based on their performance. Whereas, the test dataset is used to evaluate the model performance in production. The metrics used to analyze the model performance are discussed in the next section. 
 
-The datasets and model artifacts including the trained model(s) and their corresponding artifacts are monitored with mlflow. The MLflow dashboard can be run using the following command
+The datasets and model artifacts including the trained model(s) and their corresponding artifacts are monitored with mlflow. An overview of the MLflow dashboard is shown in [Figure 3](#fig3)
+
+<figure id="figure3">
+  <p align="center">
+  <img src="./docs/figures/mlflow_dashboard_01.gif" width="500">
+  <figcaption>Figure 3. MLflow dashboard.</figcaption>
+  </p> 
+</figure>
+
+
+The MLflow dashboard can be run using the following command
 
 ```bash
 mlflow ui --backend-store-uri ./mlflow_runs
 ```
 
-## **6. Model Performance**<a id='6'></a>
-- Implementation of an ML pipeline using Kedro
-- Integration of Kaggle API into a Kedro pipeline
-- The project includes the following pipeline items:
-    - `eda`
-    - `data_acquisition` using Kaggle API.
-    - `data_processing`:
-        - This steps explores the creatio of three different data layers called `intermediate`, `primary`, and `feature`.
-    - `model_training`
-        - baseline using Decision Tree
-        - implemented algorithms: 
-        ```
-        'Decision Tree': DecisionTreeClassifier,
-        'XGBoost': XGBClassifier,
-        'Logistic Regression': LogisticRegression,
-        'KNN': KNeighborsClassifier,
-        'Naive Bayes': GaussianNB,
-        'SVM': svm
-        ```
-    - `model_validation`
 
-> [!NOTE] 
-> The `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline to explore the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
+## **6. Model Performance**<a id='6'></a>
+The performance of the trained models is evaluated by the `model_validation` pipeline using metrics appropriate for the classification task such as `f1 score`, `recall, and `accuracy`. In addition, a confusion matrix and an AUC-ROc curve are plotted in each case. All the artifacts obtained from the `model_validation` pipeline are also tracked by mlflow.
+
+Each time the model_validation pipeline, the corresponding parameters file should be modified accordingly. Unless otherwise is explicitly required, it is recommended to match the `classifier` and `data_layer` in model_training and model_validation
+
+```yaml
+model_validation:
+  classifier: Decision Tree
+  data_layer: primary
+```
+
+The feature selection suggested that beyond features `Promo Code Used`, `Discount Applied`, and `Gender`, the rest would not impact the model performance. This observation was later verified in the. 
+
 
 ## **7. Notes about installation**<a id='7'></a>
 Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
