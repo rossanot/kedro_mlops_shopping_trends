@@ -95,7 +95,7 @@ The pipeline supports different `sklearn` methods. The name code to access each 
 'SVM': svm
 ```
 
-The `model_training` pipeline is configured to execute a baseline run and a feature selection, which is performed using the `mutual_info_classif` sklearn module, followed by a parameter grid search for hyperparameter tunning. The parameters to be explored in the grid search should be provided in the corresponding parameters file, i.e., [parameters_model_training](conf/base/parameters_model_training.yml), as follows:
+The `model_training` pipeline is configured to execute a baseline run and a feature selection, which is performed using the `mutual_info_classif` sklearn module, followed by a parameter grid search for hyperparameter tuning. The parameters to be explored in the grid search should be provided in the corresponding parameters file, i.e., [parameters_model_training](conf/base/parameters_model_training.yml), as follows:
 
 ```yaml
 model_training:
@@ -109,15 +109,15 @@ model_training:
     max_depth: [2, 4, 8, 16]
 ```
 
-Here, the `classifier` (or method) can be any of the methods supported by the pipeline mentioned before. The `data_layer` can be any of the data layers mentioned before, i.e., `intermediate`, `primary` or `feature`. The `top_n_features` refers to the `n` features with the highest importance according to the `mutual_info_classif` method. More on the impact of the feature selection is discussed in the [Model Performance](#5.) section. Finally, `hyperparams` are the parameters scanned during the grid search.
+Here, the `classifier` can be any of the methods supported by the pipeline. The `data_layer` can be any of the data layers mentioned before, i.e., `intermediate`, `primary` or `feature`. The `top_n_features` refers to the `n` features with the highest importance according to the `mutual_info_classif` method. More on the impact of the feature selection is discussed in the [Model Performance](#5.) section. Finally, `hyperparams` are the parameters scanned during the grid search.
 
 > [!WARNING]
 > Make sure that the method (alias classifier) in the `model_training` pipeline parameters file matches that in the `model_validation` one.
 > Otherwise, the training and validation will be done on different methods.
 
-All the datasets from the three different layers are split into a training, validation, and test dataset. The validation test is used to compare the models based on their performance. Whereas, the test dataset is used to evaluate the model performance in production. The metrics used to analyze the model performance are discussed in the next section. 
+All the datasets from the three different layers are split into training, validation, and test datasets. The validation dataset is used to compare the models based on their performance. Whereas, the test dataset is used to evaluate the model performance in production. The metrics used to analyze the model performance are discussed in the next section. 
 
-The datasets and model artifacts including the trained model(s) and their corresponding artifacts are monitored with mlflow. An overview of the MLflow dashboard is shown in [Figure 3](#fig3)
+The datasets and model artifacts including the trained model(s) and plots are monitored with mlflow. An overview of the MLflow dashboard is shown in [Figure 3](#fig3)
 
 <figure id="figure3">
   <p align="center">
@@ -127,7 +127,7 @@ The datasets and model artifacts including the trained model(s) and their corres
 </figure>
 
 
-The MLflow dashboard can be run using the following command
+To run the MLflow dashboard use the following command,
 
 ```bash
 mlflow ui --backend-store-uri ./mlflow_runs
@@ -135,9 +135,9 @@ mlflow ui --backend-store-uri ./mlflow_runs
 
 
 ## **6. Model Performance**<a id='6'></a>
-The performance of the trained models is evaluated by the `model_validation` pipeline using metrics appropriate for the classification task such as `f1 score`, `recall, and `accuracy`. In addition, a confusion matrix and an AUC-ROc curve are plotted in each case. All the artifacts obtained from the `model_validation` pipeline are also tracked by mlflow.
+The performance of the trained models is evaluated by the `model_validation` pipeline using metrics appropriate for the classification task such as `f1 score`, `recall, and `accuracy`. In addition, a confusion matrix and an AUC-ROC curve are plotted in each case. All the artifacts obtained from the `model_validation` pipeline are also tracked by mlflow.
 
-Each time the model_validation pipeline, the corresponding parameters file should be modified accordingly. Unless otherwise is explicitly required, it is recommended to match the `classifier` and `data_layer` in model_training and model_validation
+Each time the model_validation pipeline, the corresponding parameters file should be modified accordingly. Unless otherwise required, matching the `classifier` and `data_layer` in model_training and model_validation is recommended. 
 
 ```yaml
 model_validation:
@@ -145,8 +145,23 @@ model_validation:
   data_layer: primary
 ```
 
-The feature selection suggested that beyond features `Promo Code Used`, `Discount Applied`, and `Gender`, the rest would not impact the model performance. This observation was later verified in the. 
+The feature selection suggested that beyond features `Promo Code Used`, `Discount Applied`, and `Gender`, the rest would not impact the model performance. So, all three data layers exhibit a similar predicting performance after feature selection and hyperparameter grid search. The results for the test feature dataset are:
 
+|Metric   | Value |
+|:-------:|:-----:|
+|F1 score |   0.77|
+|Accuracy |   0.81|
+|Recall   |   1.00|
+|Precision|   0.63 |
+
+To optimize the outcome for the outlined business problem, it is necessary to predict non-subscribed customers correctly. That would mean decreasing the number of false positive predictions (for non-subscribed customers) or, increasing the precision of the model as $Precision = {True Positive}/{True Positive + False Positive}$. See the confusion matrix for the test set using the feature data layer and the Decsion Tree classifier.
+
+<figure id="figure3">
+  <p align="center">
+  <img src="./docs/figures/grid_search_conf_matrix_test_feature.jpeg" width="500">
+  <figcaption>Figure 4. Feature Layer Decision Tree Confusion Matrix.</figcaption>
+  </p> 
+</figure>
 
 ## **7. Notes about installation**<a id='7'></a>
 Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
