@@ -1,173 +1,169 @@
 # **Prediction of a Customer Subscription Status**
-## **Business Case**
-Use case: Predict the review rating of a customer.
-Target: `Review Rating`
-Nowadays customers decide where to spend their money based on review ratings posted on social media, for example, Google reviews. A bad review rating could translate into financial loses to a business.
+## **1. Business Case**<a id='1'></a>
+Herein, an ML is trained to predict a customer subscription status. By predicting the subscription status of a customer, the company would have the chance to promote customized products to the customer. A targeted advertisement of products could eventually lead to them subscribing to a service.
 
-Predicting the review rating of a customer could let the clothing company take immediate action to prevent a bad rating or further positive enagagement of the customer. For example, the store staff could offer a discount, cupon, or any other complementary service at the checkout.
+In this project, I explore the implementation of Kedro, MLflow, and Kaggle to create a streamlined ML framework. The pipeline consumes a Kaggle dataset via the Kaggle API service. Later, the acquired data is processed and used to train an ML model using Kedro's scheme. Finally, the generated models and the artifacts are tracked and versioned using MLflow. Figure 1 includes a visualization of a subsection of the Kedro pipeline.
 
+<figure>
+  <p align="center">
+  <img src="./docs/figures/kedro_feature_pipeline_no_background_01.png" width="500">
+  <figcaption>Figure 1. Kedro feature data layer pipeline.</figcaption>
+  </p>
+</figure>
 
-![Dataset Insight](docs/figures/readme_plots1.png)
+## **2. Quick Start**<a id='2'></a>
+To run the pipeline use the following command
 
-
-## Overview
-
-This is your new Kedro project, which was generated using `kedro 0.18.14`.
-
-Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
-
-## Rules and guidelines
-
-In order to get the best out of the template:
-
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a data engineering convention
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
-
-## How to install dependencies
-
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
-
-To install them, run:
-
-```
-pip install -r src/requirements.txt
+```bash
+kedro run --params mlflow_run_name="my-run-name" --pipeline "pipeline_item"
 ```
 
-## How to run your Kedro pipeline
+where `pipeline_item` can be `data_acquisition`, `data_processing`, `eda`, `model_training`, `model_validation`
+- The artifacts, including metrics, per each run are tracked using mlflow. To specify the name of the run, for example, when a specific data layer is consumed:
 
-You can run your Kedro project with:
 
-```
-kedro run
-```
-
-## How to test your Kedro project
-
-Have a look at the file `src/tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
+## **3. Data Acquisition**<a id='3'></a>
+The dataset used here was obtained from Kaggle and can be found with the following information:
 
 ```
-kedro test
+Dataset name: customer-shopping-trends-dataset
+File name: shopping_trends.csv
+Kaggler user name: iamsouravbanerjee
 ```
 
-To configure the coverage threshold, go to the `.coveragerc` file.
+The data is available as a tabular dataset in the `.csv` format. It was last accessed on September 7th, 2024. Add the corresponding API Kaggle token to [credentials.yml](./conf/local/) as follows:
 
-## Project dependencies
-
-To generate or update the dependency requirements for your project:
-
-```
-kedro build-reqs
+```yaml
+kaggle:
+      KAGGLE_USERNAME: my_kaggle_username
+      KAGGLE_KEY: my_kaggle_key
 ```
 
-This will `pip-compile` the contents of `src/requirements.txt` into a new file `src/requirements.lock`. You can see the output of the resolution by opening `src/requirements.lock`.
+Where the `KAGGLE_KEY` refers to your Kaggle token. Information on how to create a Kaggle token is described [here](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication).
 
-After this, if you'd like to update your project requirements, please update `src/requirements.txt` and re-run `kedro build-reqs`.
+> [!NOTE]
+> The source data is a synthetic dataset that might not possess the statistical nature of a real scenario. This is important to consider when analyzing the model performance.
 
-[Further information about project dependencies](https://docs.kedro.org/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
+## **4. Data Processing**<a id='4'></a>
+The data, originally containing 3900 examples and 19 features was processed in three different ways by adopting feature engineering. As a result, four different data layers were obtained, `raw`, `intermediate`, `primary`, and `feature`. The data layer `raw` is an intact copy of the Kaggle dataset. While the `intermediate`, `primary`, and `feature` are transformed versions of the `raw` dataset and were used to train a model. The purpose of creating three data layers is to compare the impact of feature engineering and feature selection on the model performance. In addition, different data layers were created to test the use of the Kedro data layers infrastructure.
 
-## How to work with Kedro and notebooks
-
-> Note: Using `kedro jupyter` or `kedro ipython` to run your notebook provides these variables in scope: `context`, `catalog`, and `startup_error`.
->
-> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `pip install -r src/requirements.txt` you will not need to take any extra steps before you use them.
-
-### Jupyter
-To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
-
-```
-pip install jupyter
-```
-
-After installing Jupyter, you can start a local notebook server:
-
-```
-kedro jupyter notebook
+```mermaid
+flowchart LR;
+    1(("`**1**`"))
+    2(("`**2**`"))
+    3(("`**3**`"))
+    Raw-->1;
+    1-->Intermediate
+    Intermediate-->2;
+    2-->Primary;
+    Primary-->3;
+    3-->Feature
 ```
 
-### JupyterLab
-To use JupyterLab, you need to install it:
+|Step| Transformations|
+|:---:|:---:|
+|`1`| Fix redundant `purchase frequency`, encode target `subscription status`|
+|`2`| `1`, encode `review rating` into ranges, `location` (states) into regions, `color`s into general hues, `item purchased` into categories|
+|`3`| `1`, `2`, encode `age`, `purchase amount`, and `previous purchase` into groups|
 
+A Streamlit dashboard, [Figure 2](#figure2), is implemented to explore each data layer. The dashboard can be invoked through `streamlit run streamlit-entry.py`.
+
+<figure id="figure2">
+  <p align="center">
+  <img src="./docs/figures/streamlit_dashboard_01.gif" width="500">
+  <figcaption>Figure 2. Streamlit dashboard overview.</figcaption>
+  </p> 
+</figure>
+
+
+## **5. Model Training**<a id='5'></a>
+The model training step is performed by assuming the following configuration presets:
+- **Target**: `Subscription Status`
+- **ML Problem**: Bimodal classification
+- **Training/Validation/Test dataset size**:
+    - training: 0.8
+    - test: 0.15
+    - validation: 0.05
+
+The pipeline supports different `sklearn` methods. The name code to access each method is given below in the format `'name code': method`.
+
+```yaml
+'XGBoost': XGBClassifier
+'Logistic Regression': LogisticRegression
+'KNN': KNeighborsClassifier
+'Naive Bayes': GaussianNB
+'SVM': svm
 ```
-pip install jupyterlab
+
+The `model_training` pipeline is configured to execute a baseline run and a feature selection, which is performed using the `mutual_info_classif` sklearn module, followed by a parameter grid search for hyperparameter tuning. The parameters to be explored in the grid search should be provided in the corresponding parameters file, i.e., [parameters_model_training](conf/base/parameters_model_training.yml), as follows:
+
+```yaml
+model_training:
+  classifier: Decision Tree
+  data_layer: intermediate # intermediate, primary, or feature
+  kfold: True
+  top_n_features: 10
+  hyperparams:
+    criterion: ['gini', 'entropy', 'log_loss']
+    splitter: ['best', 'random']
+    max_depth: [2, 4, 8, 16]
 ```
 
-You can also start JupyterLab:
+Here, the `classifier` can be any of the methods supported by the pipeline. The `data_layer` can be any of the data layers mentioned before, i.e., `intermediate`, `primary` or `feature`. The `top_n_features` refers to the `n` features with the highest importance according to the `mutual_info_classif` method. More on the impact of the feature selection is discussed in the [Model Performance](#5.) section. Finally, `hyperparams` are the parameters scanned during the grid search.
 
-```
-kedro jupyter lab
-```
+> [!WARNING]
+> Make sure that the method (alias classifier) in the `model_training` pipeline parameters file matches that in the `model_validation` one.
+> Otherwise, the training and validation will be done on different methods.
 
-### IPython
-And if you want to run an IPython session:
+All the datasets from the three different layers are split into training, validation, and test datasets. The validation dataset is used to compare the models based on their performance. Whereas, the test dataset is used to evaluate the model performance in production. The metrics used to analyze the model performance are discussed in the next section. 
 
-```
-kedro ipython
-```
+The datasets and model artifacts including the trained model(s) and plots are monitored with mlflow. An overview of the MLflow dashboard is shown in [Figure 3](#fig3)
 
-### How to convert notebook cells to nodes in a Kedro project
-You can move notebook code over into a Kedro project structure using a mixture of [cell tagging](https://jupyter-notebook.readthedocs.io/en/stable/changelog.html#release-5-0-0) and Kedro CLI commands.
+<figure id="figure3">
+  <p align="center">
+  <img src="./docs/figures/mlflow_dashboard_01.png" width="500">
+  <figcaption>Figure 3. MLflow dashboard.</figcaption>
+  </p> 
+</figure>
 
-By adding the `node` tag to a cell and running the command below, the cell's source code will be copied over to a Python file within `src/<package_name>/nodes/`:
 
-```
-kedro jupyter convert <filepath_to_my_notebook>
-```
-> *Note:* The name of the Python file matches the name of the original notebook.
+To run the MLflow dashboard use the following command,
 
-Alternatively, you may want to transform all your notebooks in one go. Run the following command to convert all notebook files found in the project root directory and under any of its sub-folders:
-
-```
-kedro jupyter convert --all
+```bash
+mlflow ui --backend-store-uri ./mlflow_runs
 ```
 
-### How to ignore notebook output cells in `git`
-To automatically strip out all output cell contents before committing to `git`, you can run `kedro activate-nbstripout`. This will add a hook in `.git/config` which will run `nbstripout` before anything is committed to `git`.
 
-> *Note:* Your output cells will be retained locally.
+## **6. Model Performance**<a id='6'></a>
+The performance of the trained models is evaluated by the `model_validation` pipeline using metrics appropriate for the classification task such as `f1 score`, `recall, and `accuracy`. In addition, a confusion matrix and an AUC-ROC curve are plotted in each case. All the artifacts obtained from the `model_validation` pipeline are also tracked by mlflow.
 
-## Package your Kedro project
+Each time the model_validation pipeline, the corresponding parameters file should be modified accordingly. Unless otherwise required, matching the `classifier` and `data_layer` in model_training and model_validation is recommended. 
 
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+```yaml
+model_validation:
+  classifier: Decision Tree
+  data_layer: primary
+```
 
-## **Project Highlights**
-- Implementation of an ML pipeline using Kedro
-- Integration of Kaggle API into a Kedro pipeline
-- The project includes the following pipeline items:
-    - `eda`
-    - `data_acquisition` using Kaggle API.
-    - `data_processing`
-    - `model_training`
-        - baseline using Decision Tree
-        - implemented algorithms: 
-        ```
-        'Decision Tree': DecisionTreeClassifier,
-        'XGBoost': XGBClassifier,
-        'Logistic Regression': LogisticRegression,
-        'KNN': KNeighborsClassifier,
-        'Naive Bayes': GaussianNB,
-        'SVM': svm
-        ```
-    - `model_validation`
-    
-    that can be run separately as:
-    ```
-    kedro run --pipeline pipeline_item
-    ```
+The feature selection suggested that beyond features `Promo Code Used`, `Discount Applied`, and `Gender`, the rest would not impact the model performance. So, all three data layers exhibit a similar predicting performance after feature selection and hyperparameter grid search. The results for the test feature dataset are:
 
-![Kedro intermediate data layer pipeline](./docs/figures/kedro_intermediate_pipeline_clear_01.png)
-- Data exploration using a Streamlit dashboard, which can be invoked through:
+|Metric   | Value |
+|:-------:|:-----:|
+|F1 score |   0.77|
+|Accuracy |   0.81|
+|Recall   |   1.00|
+|Precision|   0.63 |
 
-    ```
-    streamlit run streamlit-entry.py
-    ```
+To optimize the outcome for the outlined business problem, it is necessary to predict non-subscribed customers correctly. That would mean decreasing the number of false positive predictions (for non-subscribed customers) or, increasing the precision of the model as $Precision = {True Positive}/{True Positive + False Positive}$. See the confusion matrix for the test set using the feature data layer and the Decsion Tree classifier.
 
-![Subscription Status Distribution](./docs/figures/streamlit_dashboard_01.png)
+<figure id="figure3">
+  <p align="center">
+  <img src="./docs/figures/grid_search_conf_matrix_test_feature.jpeg" width="500">
+  <figcaption>Figure 4. Feature Layer Decision Tree Confusion Matrix.</figcaption>
+  </p> 
+</figure>
 
-Note: `03_primary` and `04_feature` data sets do not necessarily add value to the data science pipeline, however, they are included in the pipeline with the objective of exploring the use of those data layers. Here, the ML pipelines only use the `02_intermediate` dataset.
-
-## Notes about installation
+## **7. Notes about installation**<a id='7'></a>
 Should you have any problems installing `kedro[pandas]` through `pip install kedro[pandas]` try performing separate type level instalaltions, e.g., 
 
 ```
@@ -175,13 +171,10 @@ pip install kedro-datasets[pandas.ParquetDataset]
 pip install kedro-datasets[matplotlib.MatplotlibWriter]
 ```
 
-## Kaggle API configuration
-Add API Kaggle token to `./conf/local/credentials.yml` as follows:
-```
-kaggle:
-      KAGGLE_USERNAME: my_kaggle_username
-      KAGGLE_KEY: my_kaggle_key
-```
+> [!IMPORTANT]  
+> Partial migration from Kedro 0.18.14 to 0.19.8 was done, meaning that some capabilities might need further update.
 
-The `KAGGLE_KEY` refers to your Kaggle token. How to create a Kaggle token is described [here](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication).
 
+## **8. Future Work**<a id='8'></a>
+- [ ] Serve the model via the streamlit dashboard and furthermore, deploy the streamlit dashboard. 
+- [ ] Tests. For example, to validate the ingested data and the input parameters.
