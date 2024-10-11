@@ -8,7 +8,8 @@ from kedro_mlops_shopping_trends.pipelines.utils import get_params
 import matplotlib.pyplot as plt
 from sklearn.metrics import (f1_score,
                              accuracy_score,
-                             recall_score
+                             recall_score,
+                             precision_score
                              )
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -37,16 +38,19 @@ def model_evaluate(
     fscore = f1_score(y_true.to_numpy(), y_predicted)
     acc = accuracy_score(y_true.to_numpy(), y_predicted)
     recall = recall_score(y_true.to_numpy(), y_predicted)
+    precision = precision_score(y_true.to_numpy(), y_predicted)
 
     # log on screen
     logger.info('F-score: {:.3f}'.format(fscore))
     logger.info('Accuracy: {:.3f}'.format(acc))
     logger.info('Recall: {:.3f}'.format(recall))
+    logger.info('Precision: {:.3f}'.format(precision))
 
     metrics = {
         'F1-score': {'value': fscore, 'step': steps[stage]},
         'Accuracy': {'value': acc, 'step': steps[stage]},
-        'Recall': {'value': recall, 'step': steps[stage]}
+        'Recall': {'value': recall, 'step': steps[stage]},
+        'Precision': {'value': precision, 'step': steps[stage]}
         }
 
     return metrics
